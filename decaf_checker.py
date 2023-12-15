@@ -7,6 +7,8 @@ import ply.lex as lex
 import ply.yacc as yacc
 from decaf_parser import AST_tree
 import decaf_typecheck
+# import decaf_codegen
+# from decaf_absmc import machine
 
 def main():
     fn = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -24,7 +26,8 @@ def main():
     fh.close()
     parser.parse(source, lexer = lexer)
     decaf_typecheck.check_types(AST_tree)
-    AST_tree.print_table()
+    if not decaf_typecheck.error_flag:
+        AST_tree.print_table()
 
 if __name__ == "__main__":
     main()

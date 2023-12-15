@@ -1,0 +1,4455 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DO
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> class_decl
+Rule 2     program -> empty
+Rule 3     class_decl -> class_decl class_decl
+Rule 4     class_id -> ID
+Rule 5     class_decl -> CLASS class_id EXTENDS ID { class_body_decl }
+Rule 6     class_decl -> CLASS class_id { class_body_decl }
+Rule 7     class_body_decl -> class_body_decl class_body_decl
+Rule 8     class_body_decl -> field_decl
+Rule 9     class_body_decl -> method_decl
+Rule 10    class_body_decl -> constructor_decl
+Rule 11    type -> INT
+Rule 12    type -> FLOAT
+Rule 13    type -> BOOLEAN
+Rule 14    type -> ID
+Rule 15    modifier -> PRIVATE STATIC
+Rule 16    modifier -> PRIVATE
+Rule 17    modifier -> PUBLIC STATIC
+Rule 18    modifier -> PUBLIC
+Rule 19    modifier -> STATIC
+Rule 20    modifier -> empty
+Rule 21    var_decl -> type variables ;
+Rule 22    variables -> variable
+Rule 23    variables -> variable , variables
+Rule 24    variable -> ID
+Rule 25    field_decl -> modifier var_decl
+Rule 26    method_decl -> modifier type ID ( optional_formals ) block
+Rule 27    method_decl -> modifier VOID ID ( optional_formals ) block
+Rule 28    optional_formals -> formals
+Rule 29    optional_formals -> empty
+Rule 30    formals -> formal_param
+Rule 31    formals -> formal_param , formals
+Rule 32    formal_param -> type variable
+Rule 33    constructor_decl -> modifier ID ( optional_formals ) block
+Rule 34    block -> { optional_stmts }
+Rule 35    optional_stmts -> stmt optional_stmts
+Rule 36    optional_stmts -> empty
+Rule 37    stmt -> IF ( expr ) stmt ELSE stmt
+Rule 38    stmt -> IF ( expr ) stmt
+Rule 39    stmt -> WHILE ( expr ) stmt
+Rule 40    stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+Rule 41    stmt -> RETURN optional_expr ;
+Rule 42    stmt -> stmt_expr ;
+Rule 43    stmt -> BREAK ;
+Rule 44    stmt -> CONTINUE ;
+Rule 45    stmt -> block
+Rule 46    stmt -> var_decl
+Rule 47    stmt -> ;
+Rule 48    optional_expr -> expr
+Rule 49    optional_expr -> empty
+Rule 50    optional_stmt_expr -> stmt_expr
+Rule 51    optional_stmt_expr -> empty
+Rule 52    literal -> INT_CONST
+Rule 53    literal -> FLOAT_CONST
+Rule 54    literal -> STRING_CONST
+Rule 55    literal -> NULL
+Rule 56    literal -> TRUE
+Rule 57    literal -> FALSE
+Rule 58    expr -> primary
+Rule 59    expr -> assign
+Rule 60    expr -> expr arith_op expr
+Rule 61    expr -> expr bool_op expr
+Rule 62    expr -> unary_op expr
+Rule 63    field_access -> primary . ID
+Rule 64    field_access -> ID
+Rule 65    assign -> field_access ASSIGN expr
+Rule 66    assign -> field_access INCREMENT
+Rule 67    assign -> INCREMENT field_access
+Rule 68    assign -> field_access DECREMENT
+Rule 69    assign -> DECREMENT field_access
+Rule 70    method_invocation -> field_access ( arguments )
+Rule 71    method_invocation -> field_access ( )
+Rule 72    arguments -> expr
+Rule 73    arguments -> expr , arguments
+Rule 74    primary -> literal
+Rule 75    primary -> THIS
+Rule 76    primary -> SUPER
+Rule 77    primary -> ( expr )
+Rule 78    primary -> NEW ID ( arguments )
+Rule 79    primary -> NEW ID ( )
+Rule 80    primary -> field_access
+Rule 81    primary -> method_invocation
+Rule 82    stmt_expr -> assign
+Rule 83    stmt_expr -> method_invocation
+Rule 84    arith_op -> PLUS
+Rule 85    arith_op -> MINUS
+Rule 86    arith_op -> TIMES
+Rule 87    arith_op -> DIVIDE
+Rule 88    bool_op -> AND
+Rule 89    bool_op -> OR
+Rule 90    bool_op -> EQUALITY
+Rule 91    bool_op -> NOT_EQUAL
+Rule 92    bool_op -> LESSER
+Rule 93    bool_op -> GREATER
+Rule 94    bool_op -> LESSER_EQ
+Rule 95    bool_op -> GREATER_EQ
+Rule 96    unary_op -> PLUS
+Rule 97    unary_op -> MINUS
+Rule 98    unary_op -> NOT
+Rule 99    empty -> <empty>
+
+Terminals, with rules where they appear
+
+(                    : 26 27 33 37 38 39 40 70 71 77 78 79
+)                    : 26 27 33 37 38 39 40 70 71 77 78 79
+,                    : 23 31 73
+.                    : 63
+;                    : 21 40 40 41 42 43 44 47
+AND                  : 88
+ASSIGN               : 65
+BOOLEAN              : 13
+BREAK                : 43
+CLASS                : 5 6
+CONTINUE             : 44
+DECREMENT            : 68 69
+DIVIDE               : 87
+DO                   : 
+ELSE                 : 37
+EQUALITY             : 90
+EXTENDS              : 5
+FALSE                : 57
+FLOAT                : 12
+FLOAT_CONST          : 53
+FOR                  : 40
+GREATER              : 93
+GREATER_EQ           : 95
+ID                   : 4 5 14 24 26 27 33 63 64 78 79
+IF                   : 37 38
+INCREMENT            : 66 67
+INT                  : 11
+INT_CONST            : 52
+LESSER               : 92
+LESSER_EQ            : 94
+MINUS                : 85 97
+NEW                  : 78 79
+NOT                  : 98
+NOT_EQUAL            : 91
+NULL                 : 55
+OR                   : 89
+PLUS                 : 84 96
+PRIVATE              : 15 16
+PUBLIC               : 17 18
+RETURN               : 41
+STATIC               : 15 17 19
+STRING_CONST         : 54
+SUPER                : 76
+THIS                 : 75
+TIMES                : 86
+TRUE                 : 56
+VOID                 : 27
+WHILE                : 39
+error                : 
+{                    : 5 6 34
+}                    : 5 6 34
+
+Nonterminals, with rules where they appear
+
+arguments            : 70 73 78
+arith_op             : 60
+assign               : 59 82
+block                : 26 27 33 45
+bool_op              : 61
+class_body_decl      : 5 6 7 7
+class_decl           : 1 3 3
+class_id             : 5 6
+constructor_decl     : 10
+empty                : 2 20 29 36 49 51
+expr                 : 37 38 39 48 60 60 61 61 62 65 72 73 77
+field_access         : 65 66 67 68 69 70 71 80
+field_decl           : 8
+formal_param         : 30 31
+formals              : 28 31
+literal              : 74
+method_decl          : 9
+method_invocation    : 81 83
+modifier             : 25 26 27 33
+optional_expr        : 40 41
+optional_formals     : 26 27 33
+optional_stmt_expr   : 40 40
+optional_stmts       : 34 35
+primary              : 58 63
+program              : 0
+stmt                 : 35 37 37 38 39 40
+stmt_expr            : 42 50
+type                 : 21 26 32
+unary_op             : 62
+var_decl             : 25 46
+variable             : 22 23 32
+variables            : 21 23
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . class_decl
+    (2) program -> . empty
+    (3) class_decl -> . class_decl class_decl
+    (5) class_decl -> . CLASS class_id EXTENDS ID { class_body_decl }
+    (6) class_decl -> . CLASS class_id { class_body_decl }
+    (99) empty -> .
+
+    CLASS           shift and go to state 4
+    $end            reduce using rule 99 (empty -> .)
+
+    program                        shift and go to state 1
+    class_decl                     shift and go to state 2
+    empty                          shift and go to state 3
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> class_decl .
+    (3) class_decl -> class_decl . class_decl
+    (3) class_decl -> . class_decl class_decl
+    (5) class_decl -> . CLASS class_id EXTENDS ID { class_body_decl }
+    (6) class_decl -> . CLASS class_id { class_body_decl }
+
+    $end            reduce using rule 1 (program -> class_decl .)
+    CLASS           shift and go to state 4
+
+    class_decl                     shift and go to state 5
+
+state 3
+
+    (2) program -> empty .
+
+    $end            reduce using rule 2 (program -> empty .)
+
+
+state 4
+
+    (5) class_decl -> CLASS . class_id EXTENDS ID { class_body_decl }
+    (6) class_decl -> CLASS . class_id { class_body_decl }
+    (4) class_id -> . ID
+
+    ID              shift and go to state 7
+
+    class_id                       shift and go to state 6
+
+state 5
+
+    (3) class_decl -> class_decl class_decl .
+    (3) class_decl -> class_decl . class_decl
+    (3) class_decl -> . class_decl class_decl
+    (5) class_decl -> . CLASS class_id EXTENDS ID { class_body_decl }
+    (6) class_decl -> . CLASS class_id { class_body_decl }
+
+  ! shift/reduce conflict for CLASS resolved as shift
+    $end            reduce using rule 3 (class_decl -> class_decl class_decl .)
+    CLASS           shift and go to state 4
+
+  ! CLASS           [ reduce using rule 3 (class_decl -> class_decl class_decl .) ]
+
+    class_decl                     shift and go to state 5
+
+state 6
+
+    (5) class_decl -> CLASS class_id . EXTENDS ID { class_body_decl }
+    (6) class_decl -> CLASS class_id . { class_body_decl }
+
+    EXTENDS         shift and go to state 8
+    {               shift and go to state 9
+
+
+state 7
+
+    (4) class_id -> ID .
+
+    EXTENDS         reduce using rule 4 (class_id -> ID .)
+    {               reduce using rule 4 (class_id -> ID .)
+
+
+state 8
+
+    (5) class_decl -> CLASS class_id EXTENDS . ID { class_body_decl }
+
+    ID              shift and go to state 10
+
+
+state 9
+
+    (6) class_decl -> CLASS class_id { . class_body_decl }
+    (7) class_body_decl -> . class_body_decl class_body_decl
+    (8) class_body_decl -> . field_decl
+    (9) class_body_decl -> . method_decl
+    (10) class_body_decl -> . constructor_decl
+    (25) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type ID ( optional_formals ) block
+    (27) method_decl -> . modifier VOID ID ( optional_formals ) block
+    (33) constructor_decl -> . modifier ID ( optional_formals ) block
+    (15) modifier -> . PRIVATE STATIC
+    (16) modifier -> . PRIVATE
+    (17) modifier -> . PUBLIC STATIC
+    (18) modifier -> . PUBLIC
+    (19) modifier -> . STATIC
+    (20) modifier -> . empty
+    (99) empty -> .
+
+    PRIVATE         shift and go to state 16
+    PUBLIC          shift and go to state 18
+    STATIC          shift and go to state 17
+    VOID            reduce using rule 99 (empty -> .)
+    ID              reduce using rule 99 (empty -> .)
+    INT             reduce using rule 99 (empty -> .)
+    FLOAT           reduce using rule 99 (empty -> .)
+    BOOLEAN         reduce using rule 99 (empty -> .)
+
+    class_body_decl                shift and go to state 11
+    field_decl                     shift and go to state 12
+    method_decl                    shift and go to state 13
+    constructor_decl               shift and go to state 14
+    modifier                       shift and go to state 15
+    empty                          shift and go to state 19
+
+state 10
+
+    (5) class_decl -> CLASS class_id EXTENDS ID . { class_body_decl }
+
+    {               shift and go to state 20
+
+
+state 11
+
+    (6) class_decl -> CLASS class_id { class_body_decl . }
+    (7) class_body_decl -> class_body_decl . class_body_decl
+    (7) class_body_decl -> . class_body_decl class_body_decl
+    (8) class_body_decl -> . field_decl
+    (9) class_body_decl -> . method_decl
+    (10) class_body_decl -> . constructor_decl
+    (25) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type ID ( optional_formals ) block
+    (27) method_decl -> . modifier VOID ID ( optional_formals ) block
+    (33) constructor_decl -> . modifier ID ( optional_formals ) block
+    (15) modifier -> . PRIVATE STATIC
+    (16) modifier -> . PRIVATE
+    (17) modifier -> . PUBLIC STATIC
+    (18) modifier -> . PUBLIC
+    (19) modifier -> . STATIC
+    (20) modifier -> . empty
+    (99) empty -> .
+
+    }               shift and go to state 22
+    PRIVATE         shift and go to state 16
+    PUBLIC          shift and go to state 18
+    STATIC          shift and go to state 17
+    VOID            reduce using rule 99 (empty -> .)
+    ID              reduce using rule 99 (empty -> .)
+    INT             reduce using rule 99 (empty -> .)
+    FLOAT           reduce using rule 99 (empty -> .)
+    BOOLEAN         reduce using rule 99 (empty -> .)
+
+    class_body_decl                shift and go to state 21
+    field_decl                     shift and go to state 12
+    method_decl                    shift and go to state 13
+    constructor_decl               shift and go to state 14
+    modifier                       shift and go to state 15
+    empty                          shift and go to state 19
+
+state 12
+
+    (8) class_body_decl -> field_decl .
+
+    }               reduce using rule 8 (class_body_decl -> field_decl .)
+    PRIVATE         reduce using rule 8 (class_body_decl -> field_decl .)
+    PUBLIC          reduce using rule 8 (class_body_decl -> field_decl .)
+    STATIC          reduce using rule 8 (class_body_decl -> field_decl .)
+    VOID            reduce using rule 8 (class_body_decl -> field_decl .)
+    ID              reduce using rule 8 (class_body_decl -> field_decl .)
+    INT             reduce using rule 8 (class_body_decl -> field_decl .)
+    FLOAT           reduce using rule 8 (class_body_decl -> field_decl .)
+    BOOLEAN         reduce using rule 8 (class_body_decl -> field_decl .)
+
+
+state 13
+
+    (9) class_body_decl -> method_decl .
+
+    }               reduce using rule 9 (class_body_decl -> method_decl .)
+    PRIVATE         reduce using rule 9 (class_body_decl -> method_decl .)
+    PUBLIC          reduce using rule 9 (class_body_decl -> method_decl .)
+    STATIC          reduce using rule 9 (class_body_decl -> method_decl .)
+    VOID            reduce using rule 9 (class_body_decl -> method_decl .)
+    ID              reduce using rule 9 (class_body_decl -> method_decl .)
+    INT             reduce using rule 9 (class_body_decl -> method_decl .)
+    FLOAT           reduce using rule 9 (class_body_decl -> method_decl .)
+    BOOLEAN         reduce using rule 9 (class_body_decl -> method_decl .)
+
+
+state 14
+
+    (10) class_body_decl -> constructor_decl .
+
+    }               reduce using rule 10 (class_body_decl -> constructor_decl .)
+    PRIVATE         reduce using rule 10 (class_body_decl -> constructor_decl .)
+    PUBLIC          reduce using rule 10 (class_body_decl -> constructor_decl .)
+    STATIC          reduce using rule 10 (class_body_decl -> constructor_decl .)
+    VOID            reduce using rule 10 (class_body_decl -> constructor_decl .)
+    ID              reduce using rule 10 (class_body_decl -> constructor_decl .)
+    INT             reduce using rule 10 (class_body_decl -> constructor_decl .)
+    FLOAT           reduce using rule 10 (class_body_decl -> constructor_decl .)
+    BOOLEAN         reduce using rule 10 (class_body_decl -> constructor_decl .)
+
+
+state 15
+
+    (25) field_decl -> modifier . var_decl
+    (26) method_decl -> modifier . type ID ( optional_formals ) block
+    (27) method_decl -> modifier . VOID ID ( optional_formals ) block
+    (33) constructor_decl -> modifier . ID ( optional_formals ) block
+    (21) var_decl -> . type variables ;
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+
+    VOID            shift and go to state 26
+    ID              shift and go to state 25
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+
+    var_decl                       shift and go to state 23
+    type                           shift and go to state 24
+
+state 16
+
+    (15) modifier -> PRIVATE . STATIC
+    (16) modifier -> PRIVATE .
+
+    STATIC          shift and go to state 30
+    VOID            reduce using rule 16 (modifier -> PRIVATE .)
+    ID              reduce using rule 16 (modifier -> PRIVATE .)
+    INT             reduce using rule 16 (modifier -> PRIVATE .)
+    FLOAT           reduce using rule 16 (modifier -> PRIVATE .)
+    BOOLEAN         reduce using rule 16 (modifier -> PRIVATE .)
+
+
+state 17
+
+    (19) modifier -> STATIC .
+
+    VOID            reduce using rule 19 (modifier -> STATIC .)
+    ID              reduce using rule 19 (modifier -> STATIC .)
+    INT             reduce using rule 19 (modifier -> STATIC .)
+    FLOAT           reduce using rule 19 (modifier -> STATIC .)
+    BOOLEAN         reduce using rule 19 (modifier -> STATIC .)
+
+
+state 18
+
+    (17) modifier -> PUBLIC . STATIC
+    (18) modifier -> PUBLIC .
+
+    STATIC          shift and go to state 31
+    VOID            reduce using rule 18 (modifier -> PUBLIC .)
+    ID              reduce using rule 18 (modifier -> PUBLIC .)
+    INT             reduce using rule 18 (modifier -> PUBLIC .)
+    FLOAT           reduce using rule 18 (modifier -> PUBLIC .)
+    BOOLEAN         reduce using rule 18 (modifier -> PUBLIC .)
+
+
+state 19
+
+    (20) modifier -> empty .
+
+    VOID            reduce using rule 20 (modifier -> empty .)
+    ID              reduce using rule 20 (modifier -> empty .)
+    INT             reduce using rule 20 (modifier -> empty .)
+    FLOAT           reduce using rule 20 (modifier -> empty .)
+    BOOLEAN         reduce using rule 20 (modifier -> empty .)
+
+
+state 20
+
+    (5) class_decl -> CLASS class_id EXTENDS ID { . class_body_decl }
+    (7) class_body_decl -> . class_body_decl class_body_decl
+    (8) class_body_decl -> . field_decl
+    (9) class_body_decl -> . method_decl
+    (10) class_body_decl -> . constructor_decl
+    (25) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type ID ( optional_formals ) block
+    (27) method_decl -> . modifier VOID ID ( optional_formals ) block
+    (33) constructor_decl -> . modifier ID ( optional_formals ) block
+    (15) modifier -> . PRIVATE STATIC
+    (16) modifier -> . PRIVATE
+    (17) modifier -> . PUBLIC STATIC
+    (18) modifier -> . PUBLIC
+    (19) modifier -> . STATIC
+    (20) modifier -> . empty
+    (99) empty -> .
+
+    PRIVATE         shift and go to state 16
+    PUBLIC          shift and go to state 18
+    STATIC          shift and go to state 17
+    VOID            reduce using rule 99 (empty -> .)
+    ID              reduce using rule 99 (empty -> .)
+    INT             reduce using rule 99 (empty -> .)
+    FLOAT           reduce using rule 99 (empty -> .)
+    BOOLEAN         reduce using rule 99 (empty -> .)
+
+    class_body_decl                shift and go to state 32
+    field_decl                     shift and go to state 12
+    method_decl                    shift and go to state 13
+    constructor_decl               shift and go to state 14
+    modifier                       shift and go to state 15
+    empty                          shift and go to state 19
+
+state 21
+
+    (7) class_body_decl -> class_body_decl class_body_decl .
+    (7) class_body_decl -> class_body_decl . class_body_decl
+    (7) class_body_decl -> . class_body_decl class_body_decl
+    (8) class_body_decl -> . field_decl
+    (9) class_body_decl -> . method_decl
+    (10) class_body_decl -> . constructor_decl
+    (25) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type ID ( optional_formals ) block
+    (27) method_decl -> . modifier VOID ID ( optional_formals ) block
+    (33) constructor_decl -> . modifier ID ( optional_formals ) block
+    (15) modifier -> . PRIVATE STATIC
+    (16) modifier -> . PRIVATE
+    (17) modifier -> . PUBLIC STATIC
+    (18) modifier -> . PUBLIC
+    (19) modifier -> . STATIC
+    (20) modifier -> . empty
+    (99) empty -> .
+
+  ! shift/reduce conflict for PRIVATE resolved as shift
+  ! shift/reduce conflict for PUBLIC resolved as shift
+  ! shift/reduce conflict for STATIC resolved as shift
+  ! reduce/reduce conflict for VOID resolved using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+  ! reduce/reduce conflict for ID resolved using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+  ! reduce/reduce conflict for INT resolved using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+  ! reduce/reduce conflict for FLOAT resolved using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+  ! reduce/reduce conflict for BOOLEAN resolved using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    }               reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    VOID            reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    ID              reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    INT             reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    FLOAT           reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    BOOLEAN         reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .)
+    PRIVATE         shift and go to state 16
+    PUBLIC          shift and go to state 18
+    STATIC          shift and go to state 17
+
+  ! PRIVATE         [ reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .) ]
+  ! PUBLIC          [ reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .) ]
+  ! STATIC          [ reduce using rule 7 (class_body_decl -> class_body_decl class_body_decl .) ]
+  ! VOID            [ reduce using rule 99 (empty -> .) ]
+  ! ID              [ reduce using rule 99 (empty -> .) ]
+  ! INT             [ reduce using rule 99 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 99 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 99 (empty -> .) ]
+
+    class_body_decl                shift and go to state 21
+    field_decl                     shift and go to state 12
+    method_decl                    shift and go to state 13
+    constructor_decl               shift and go to state 14
+    modifier                       shift and go to state 15
+    empty                          shift and go to state 19
+
+state 22
+
+    (6) class_decl -> CLASS class_id { class_body_decl } .
+
+    CLASS           reduce using rule 6 (class_decl -> CLASS class_id { class_body_decl } .)
+    $end            reduce using rule 6 (class_decl -> CLASS class_id { class_body_decl } .)
+
+
+state 23
+
+    (25) field_decl -> modifier var_decl .
+
+    }               reduce using rule 25 (field_decl -> modifier var_decl .)
+    PRIVATE         reduce using rule 25 (field_decl -> modifier var_decl .)
+    PUBLIC          reduce using rule 25 (field_decl -> modifier var_decl .)
+    STATIC          reduce using rule 25 (field_decl -> modifier var_decl .)
+    VOID            reduce using rule 25 (field_decl -> modifier var_decl .)
+    ID              reduce using rule 25 (field_decl -> modifier var_decl .)
+    INT             reduce using rule 25 (field_decl -> modifier var_decl .)
+    FLOAT           reduce using rule 25 (field_decl -> modifier var_decl .)
+    BOOLEAN         reduce using rule 25 (field_decl -> modifier var_decl .)
+
+
+state 24
+
+    (26) method_decl -> modifier type . ID ( optional_formals ) block
+    (21) var_decl -> type . variables ;
+    (22) variables -> . variable
+    (23) variables -> . variable , variables
+    (24) variable -> . ID
+
+    ID              shift and go to state 33
+
+    variables                      shift and go to state 34
+    variable                       shift and go to state 35
+
+state 25
+
+    (33) constructor_decl -> modifier ID . ( optional_formals ) block
+    (14) type -> ID .
+
+    (               shift and go to state 36
+    ID              reduce using rule 14 (type -> ID .)
+
+
+state 26
+
+    (27) method_decl -> modifier VOID . ID ( optional_formals ) block
+
+    ID              shift and go to state 37
+
+
+state 27
+
+    (11) type -> INT .
+
+    ID              reduce using rule 11 (type -> INT .)
+
+
+state 28
+
+    (12) type -> FLOAT .
+
+    ID              reduce using rule 12 (type -> FLOAT .)
+
+
+state 29
+
+    (13) type -> BOOLEAN .
+
+    ID              reduce using rule 13 (type -> BOOLEAN .)
+
+
+state 30
+
+    (15) modifier -> PRIVATE STATIC .
+
+    VOID            reduce using rule 15 (modifier -> PRIVATE STATIC .)
+    ID              reduce using rule 15 (modifier -> PRIVATE STATIC .)
+    INT             reduce using rule 15 (modifier -> PRIVATE STATIC .)
+    FLOAT           reduce using rule 15 (modifier -> PRIVATE STATIC .)
+    BOOLEAN         reduce using rule 15 (modifier -> PRIVATE STATIC .)
+
+
+state 31
+
+    (17) modifier -> PUBLIC STATIC .
+
+    VOID            reduce using rule 17 (modifier -> PUBLIC STATIC .)
+    ID              reduce using rule 17 (modifier -> PUBLIC STATIC .)
+    INT             reduce using rule 17 (modifier -> PUBLIC STATIC .)
+    FLOAT           reduce using rule 17 (modifier -> PUBLIC STATIC .)
+    BOOLEAN         reduce using rule 17 (modifier -> PUBLIC STATIC .)
+
+
+state 32
+
+    (5) class_decl -> CLASS class_id EXTENDS ID { class_body_decl . }
+    (7) class_body_decl -> class_body_decl . class_body_decl
+    (7) class_body_decl -> . class_body_decl class_body_decl
+    (8) class_body_decl -> . field_decl
+    (9) class_body_decl -> . method_decl
+    (10) class_body_decl -> . constructor_decl
+    (25) field_decl -> . modifier var_decl
+    (26) method_decl -> . modifier type ID ( optional_formals ) block
+    (27) method_decl -> . modifier VOID ID ( optional_formals ) block
+    (33) constructor_decl -> . modifier ID ( optional_formals ) block
+    (15) modifier -> . PRIVATE STATIC
+    (16) modifier -> . PRIVATE
+    (17) modifier -> . PUBLIC STATIC
+    (18) modifier -> . PUBLIC
+    (19) modifier -> . STATIC
+    (20) modifier -> . empty
+    (99) empty -> .
+
+    }               shift and go to state 38
+    PRIVATE         shift and go to state 16
+    PUBLIC          shift and go to state 18
+    STATIC          shift and go to state 17
+    VOID            reduce using rule 99 (empty -> .)
+    ID              reduce using rule 99 (empty -> .)
+    INT             reduce using rule 99 (empty -> .)
+    FLOAT           reduce using rule 99 (empty -> .)
+    BOOLEAN         reduce using rule 99 (empty -> .)
+
+    class_body_decl                shift and go to state 21
+    field_decl                     shift and go to state 12
+    method_decl                    shift and go to state 13
+    constructor_decl               shift and go to state 14
+    modifier                       shift and go to state 15
+    empty                          shift and go to state 19
+
+state 33
+
+    (26) method_decl -> modifier type ID . ( optional_formals ) block
+    (24) variable -> ID .
+
+    (               shift and go to state 39
+    ,               reduce using rule 24 (variable -> ID .)
+    ;               reduce using rule 24 (variable -> ID .)
+
+
+state 34
+
+    (21) var_decl -> type variables . ;
+
+    ;               shift and go to state 40
+
+
+state 35
+
+    (22) variables -> variable .
+    (23) variables -> variable . , variables
+
+    ;               reduce using rule 22 (variables -> variable .)
+    ,               shift and go to state 41
+
+
+state 36
+
+    (33) constructor_decl -> modifier ID ( . optional_formals ) block
+    (28) optional_formals -> . formals
+    (29) optional_formals -> . empty
+    (30) formals -> . formal_param
+    (31) formals -> . formal_param , formals
+    (99) empty -> .
+    (32) formal_param -> . type variable
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+
+    )               reduce using rule 99 (empty -> .)
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 42
+
+    optional_formals               shift and go to state 43
+    formals                        shift and go to state 44
+    empty                          shift and go to state 45
+    formal_param                   shift and go to state 46
+    type                           shift and go to state 47
+
+state 37
+
+    (27) method_decl -> modifier VOID ID . ( optional_formals ) block
+
+    (               shift and go to state 48
+
+
+state 38
+
+    (5) class_decl -> CLASS class_id EXTENDS ID { class_body_decl } .
+
+    CLASS           reduce using rule 5 (class_decl -> CLASS class_id EXTENDS ID { class_body_decl } .)
+    $end            reduce using rule 5 (class_decl -> CLASS class_id EXTENDS ID { class_body_decl } .)
+
+
+state 39
+
+    (26) method_decl -> modifier type ID ( . optional_formals ) block
+    (28) optional_formals -> . formals
+    (29) optional_formals -> . empty
+    (30) formals -> . formal_param
+    (31) formals -> . formal_param , formals
+    (99) empty -> .
+    (32) formal_param -> . type variable
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+
+    )               reduce using rule 99 (empty -> .)
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 42
+
+    type                           shift and go to state 47
+    optional_formals               shift and go to state 49
+    formals                        shift and go to state 44
+    empty                          shift and go to state 45
+    formal_param                   shift and go to state 46
+
+state 40
+
+    (21) var_decl -> type variables ; .
+
+    }               reduce using rule 21 (var_decl -> type variables ; .)
+    PRIVATE         reduce using rule 21 (var_decl -> type variables ; .)
+    PUBLIC          reduce using rule 21 (var_decl -> type variables ; .)
+    STATIC          reduce using rule 21 (var_decl -> type variables ; .)
+    VOID            reduce using rule 21 (var_decl -> type variables ; .)
+    ID              reduce using rule 21 (var_decl -> type variables ; .)
+    INT             reduce using rule 21 (var_decl -> type variables ; .)
+    FLOAT           reduce using rule 21 (var_decl -> type variables ; .)
+    BOOLEAN         reduce using rule 21 (var_decl -> type variables ; .)
+    IF              reduce using rule 21 (var_decl -> type variables ; .)
+    WHILE           reduce using rule 21 (var_decl -> type variables ; .)
+    FOR             reduce using rule 21 (var_decl -> type variables ; .)
+    RETURN          reduce using rule 21 (var_decl -> type variables ; .)
+    BREAK           reduce using rule 21 (var_decl -> type variables ; .)
+    CONTINUE        reduce using rule 21 (var_decl -> type variables ; .)
+    ;               reduce using rule 21 (var_decl -> type variables ; .)
+    {               reduce using rule 21 (var_decl -> type variables ; .)
+    INCREMENT       reduce using rule 21 (var_decl -> type variables ; .)
+    DECREMENT       reduce using rule 21 (var_decl -> type variables ; .)
+    THIS            reduce using rule 21 (var_decl -> type variables ; .)
+    SUPER           reduce using rule 21 (var_decl -> type variables ; .)
+    (               reduce using rule 21 (var_decl -> type variables ; .)
+    NEW             reduce using rule 21 (var_decl -> type variables ; .)
+    INT_CONST       reduce using rule 21 (var_decl -> type variables ; .)
+    FLOAT_CONST     reduce using rule 21 (var_decl -> type variables ; .)
+    STRING_CONST    reduce using rule 21 (var_decl -> type variables ; .)
+    NULL            reduce using rule 21 (var_decl -> type variables ; .)
+    TRUE            reduce using rule 21 (var_decl -> type variables ; .)
+    FALSE           reduce using rule 21 (var_decl -> type variables ; .)
+    ELSE            reduce using rule 21 (var_decl -> type variables ; .)
+
+
+state 41
+
+    (23) variables -> variable , . variables
+    (22) variables -> . variable
+    (23) variables -> . variable , variables
+    (24) variable -> . ID
+
+    ID              shift and go to state 51
+
+    variable                       shift and go to state 35
+    variables                      shift and go to state 50
+
+state 42
+
+    (14) type -> ID .
+
+    ID              reduce using rule 14 (type -> ID .)
+
+
+state 43
+
+    (33) constructor_decl -> modifier ID ( optional_formals . ) block
+
+    )               shift and go to state 52
+
+
+state 44
+
+    (28) optional_formals -> formals .
+
+    )               reduce using rule 28 (optional_formals -> formals .)
+
+
+state 45
+
+    (29) optional_formals -> empty .
+
+    )               reduce using rule 29 (optional_formals -> empty .)
+
+
+state 46
+
+    (30) formals -> formal_param .
+    (31) formals -> formal_param . , formals
+
+    )               reduce using rule 30 (formals -> formal_param .)
+    ,               shift and go to state 53
+
+
+state 47
+
+    (32) formal_param -> type . variable
+    (24) variable -> . ID
+
+    ID              shift and go to state 51
+
+    variable                       shift and go to state 54
+
+state 48
+
+    (27) method_decl -> modifier VOID ID ( . optional_formals ) block
+    (28) optional_formals -> . formals
+    (29) optional_formals -> . empty
+    (30) formals -> . formal_param
+    (31) formals -> . formal_param , formals
+    (99) empty -> .
+    (32) formal_param -> . type variable
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+
+    )               reduce using rule 99 (empty -> .)
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 42
+
+    optional_formals               shift and go to state 55
+    formals                        shift and go to state 44
+    empty                          shift and go to state 45
+    formal_param                   shift and go to state 46
+    type                           shift and go to state 47
+
+state 49
+
+    (26) method_decl -> modifier type ID ( optional_formals . ) block
+
+    )               shift and go to state 56
+
+
+state 50
+
+    (23) variables -> variable , variables .
+
+    ;               reduce using rule 23 (variables -> variable , variables .)
+
+
+state 51
+
+    (24) variable -> ID .
+
+    ,               reduce using rule 24 (variable -> ID .)
+    ;               reduce using rule 24 (variable -> ID .)
+    )               reduce using rule 24 (variable -> ID .)
+
+
+state 52
+
+    (33) constructor_decl -> modifier ID ( optional_formals ) . block
+    (34) block -> . { optional_stmts }
+
+    {               shift and go to state 58
+
+    block                          shift and go to state 57
+
+state 53
+
+    (31) formals -> formal_param , . formals
+    (30) formals -> . formal_param
+    (31) formals -> . formal_param , formals
+    (32) formal_param -> . type variable
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 42
+
+    formal_param                   shift and go to state 46
+    formals                        shift and go to state 59
+    type                           shift and go to state 47
+
+state 54
+
+    (32) formal_param -> type variable .
+
+    ,               reduce using rule 32 (formal_param -> type variable .)
+    )               reduce using rule 32 (formal_param -> type variable .)
+
+
+state 55
+
+    (27) method_decl -> modifier VOID ID ( optional_formals . ) block
+
+    )               shift and go to state 60
+
+
+state 56
+
+    (26) method_decl -> modifier type ID ( optional_formals ) . block
+    (34) block -> . { optional_stmts }
+
+    {               shift and go to state 58
+
+    block                          shift and go to state 61
+
+state 57
+
+    (33) constructor_decl -> modifier ID ( optional_formals ) block .
+
+    }               reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    PRIVATE         reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    PUBLIC          reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    STATIC          reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    VOID            reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    ID              reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    INT             reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    FLOAT           reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+    BOOLEAN         reduce using rule 33 (constructor_decl -> modifier ID ( optional_formals ) block .)
+
+
+state 58
+
+    (34) block -> { . optional_stmts }
+    (35) optional_stmts -> . stmt optional_stmts
+    (36) optional_stmts -> . empty
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (99) empty -> .
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    }               reduce using rule 99 (empty -> .)
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    optional_stmts                 shift and go to state 62
+    stmt                           shift and go to state 63
+    empty                          shift and go to state 64
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 59
+
+    (31) formals -> formal_param , formals .
+
+    )               reduce using rule 31 (formals -> formal_param , formals .)
+
+
+state 60
+
+    (27) method_decl -> modifier VOID ID ( optional_formals ) . block
+    (34) block -> . { optional_stmts }
+
+    {               shift and go to state 58
+
+    block                          shift and go to state 94
+
+state 61
+
+    (26) method_decl -> modifier type ID ( optional_formals ) block .
+
+    }               reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    PRIVATE         reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    PUBLIC          reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    STATIC          reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    VOID            reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    ID              reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    INT             reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    FLOAT           reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+    BOOLEAN         reduce using rule 26 (method_decl -> modifier type ID ( optional_formals ) block .)
+
+
+state 62
+
+    (34) block -> { optional_stmts . }
+
+    }               shift and go to state 95
+
+
+state 63
+
+    (35) optional_stmts -> stmt . optional_stmts
+    (35) optional_stmts -> . stmt optional_stmts
+    (36) optional_stmts -> . empty
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (99) empty -> .
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    }               reduce using rule 99 (empty -> .)
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    stmt                           shift and go to state 63
+    optional_stmts                 shift and go to state 96
+    empty                          shift and go to state 64
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 64
+
+    (36) optional_stmts -> empty .
+
+    }               reduce using rule 36 (optional_stmts -> empty .)
+
+
+state 65
+
+    (37) stmt -> IF . ( expr ) stmt ELSE stmt
+    (38) stmt -> IF . ( expr ) stmt
+
+    (               shift and go to state 97
+
+
+state 66
+
+    (77) primary -> ( . expr )
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 98
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 67
+
+    (39) stmt -> WHILE . ( expr ) stmt
+
+    (               shift and go to state 108
+
+
+state 68
+
+    (40) stmt -> FOR . ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+
+    (               shift and go to state 109
+
+
+state 69
+
+    (47) stmt -> ; .
+
+    IF              reduce using rule 47 (stmt -> ; .)
+    WHILE           reduce using rule 47 (stmt -> ; .)
+    FOR             reduce using rule 47 (stmt -> ; .)
+    RETURN          reduce using rule 47 (stmt -> ; .)
+    BREAK           reduce using rule 47 (stmt -> ; .)
+    CONTINUE        reduce using rule 47 (stmt -> ; .)
+    ;               reduce using rule 47 (stmt -> ; .)
+    {               reduce using rule 47 (stmt -> ; .)
+    INCREMENT       reduce using rule 47 (stmt -> ; .)
+    DECREMENT       reduce using rule 47 (stmt -> ; .)
+    INT             reduce using rule 47 (stmt -> ; .)
+    FLOAT           reduce using rule 47 (stmt -> ; .)
+    BOOLEAN         reduce using rule 47 (stmt -> ; .)
+    ID              reduce using rule 47 (stmt -> ; .)
+    THIS            reduce using rule 47 (stmt -> ; .)
+    SUPER           reduce using rule 47 (stmt -> ; .)
+    (               reduce using rule 47 (stmt -> ; .)
+    NEW             reduce using rule 47 (stmt -> ; .)
+    INT_CONST       reduce using rule 47 (stmt -> ; .)
+    FLOAT_CONST     reduce using rule 47 (stmt -> ; .)
+    STRING_CONST    reduce using rule 47 (stmt -> ; .)
+    NULL            reduce using rule 47 (stmt -> ; .)
+    TRUE            reduce using rule 47 (stmt -> ; .)
+    FALSE           reduce using rule 47 (stmt -> ; .)
+    }               reduce using rule 47 (stmt -> ; .)
+    ELSE            reduce using rule 47 (stmt -> ; .)
+
+
+state 70
+
+    (41) stmt -> RETURN . optional_expr ;
+    (48) optional_expr -> . expr
+    (49) optional_expr -> . empty
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (99) empty -> .
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    ;               reduce using rule 99 (empty -> .)
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    optional_expr                  shift and go to state 110
+    expr                           shift and go to state 111
+    empty                          shift and go to state 112
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 71
+
+    (42) stmt -> stmt_expr . ;
+
+    ;               shift and go to state 113
+
+
+state 72
+
+    (43) stmt -> BREAK . ;
+
+    ;               shift and go to state 114
+
+
+state 73
+
+    (44) stmt -> CONTINUE . ;
+
+    ;               shift and go to state 115
+
+
+state 74
+
+    (45) stmt -> block .
+
+    IF              reduce using rule 45 (stmt -> block .)
+    WHILE           reduce using rule 45 (stmt -> block .)
+    FOR             reduce using rule 45 (stmt -> block .)
+    RETURN          reduce using rule 45 (stmt -> block .)
+    BREAK           reduce using rule 45 (stmt -> block .)
+    CONTINUE        reduce using rule 45 (stmt -> block .)
+    ;               reduce using rule 45 (stmt -> block .)
+    {               reduce using rule 45 (stmt -> block .)
+    INCREMENT       reduce using rule 45 (stmt -> block .)
+    DECREMENT       reduce using rule 45 (stmt -> block .)
+    INT             reduce using rule 45 (stmt -> block .)
+    FLOAT           reduce using rule 45 (stmt -> block .)
+    BOOLEAN         reduce using rule 45 (stmt -> block .)
+    ID              reduce using rule 45 (stmt -> block .)
+    THIS            reduce using rule 45 (stmt -> block .)
+    SUPER           reduce using rule 45 (stmt -> block .)
+    (               reduce using rule 45 (stmt -> block .)
+    NEW             reduce using rule 45 (stmt -> block .)
+    INT_CONST       reduce using rule 45 (stmt -> block .)
+    FLOAT_CONST     reduce using rule 45 (stmt -> block .)
+    STRING_CONST    reduce using rule 45 (stmt -> block .)
+    NULL            reduce using rule 45 (stmt -> block .)
+    TRUE            reduce using rule 45 (stmt -> block .)
+    FALSE           reduce using rule 45 (stmt -> block .)
+    }               reduce using rule 45 (stmt -> block .)
+    ELSE            reduce using rule 45 (stmt -> block .)
+
+
+state 75
+
+    (46) stmt -> var_decl .
+
+    IF              reduce using rule 46 (stmt -> var_decl .)
+    WHILE           reduce using rule 46 (stmt -> var_decl .)
+    FOR             reduce using rule 46 (stmt -> var_decl .)
+    RETURN          reduce using rule 46 (stmt -> var_decl .)
+    BREAK           reduce using rule 46 (stmt -> var_decl .)
+    CONTINUE        reduce using rule 46 (stmt -> var_decl .)
+    ;               reduce using rule 46 (stmt -> var_decl .)
+    {               reduce using rule 46 (stmt -> var_decl .)
+    INCREMENT       reduce using rule 46 (stmt -> var_decl .)
+    DECREMENT       reduce using rule 46 (stmt -> var_decl .)
+    INT             reduce using rule 46 (stmt -> var_decl .)
+    FLOAT           reduce using rule 46 (stmt -> var_decl .)
+    BOOLEAN         reduce using rule 46 (stmt -> var_decl .)
+    ID              reduce using rule 46 (stmt -> var_decl .)
+    THIS            reduce using rule 46 (stmt -> var_decl .)
+    SUPER           reduce using rule 46 (stmt -> var_decl .)
+    (               reduce using rule 46 (stmt -> var_decl .)
+    NEW             reduce using rule 46 (stmt -> var_decl .)
+    INT_CONST       reduce using rule 46 (stmt -> var_decl .)
+    FLOAT_CONST     reduce using rule 46 (stmt -> var_decl .)
+    STRING_CONST    reduce using rule 46 (stmt -> var_decl .)
+    NULL            reduce using rule 46 (stmt -> var_decl .)
+    TRUE            reduce using rule 46 (stmt -> var_decl .)
+    FALSE           reduce using rule 46 (stmt -> var_decl .)
+    }               reduce using rule 46 (stmt -> var_decl .)
+    ELSE            reduce using rule 46 (stmt -> var_decl .)
+
+
+state 76
+
+    (82) stmt_expr -> assign .
+
+    ;               reduce using rule 82 (stmt_expr -> assign .)
+    )               reduce using rule 82 (stmt_expr -> assign .)
+
+
+state 77
+
+    (83) stmt_expr -> method_invocation .
+    (81) primary -> method_invocation .
+
+    ;               reduce using rule 83 (stmt_expr -> method_invocation .)
+    )               reduce using rule 83 (stmt_expr -> method_invocation .)
+    .               reduce using rule 81 (primary -> method_invocation .)
+
+
+state 78
+
+    (21) var_decl -> type . variables ;
+    (22) variables -> . variable
+    (23) variables -> . variable , variables
+    (24) variable -> . ID
+
+    ID              shift and go to state 51
+
+    variables                      shift and go to state 34
+    variable                       shift and go to state 35
+
+state 79
+
+    (65) assign -> field_access . ASSIGN expr
+    (66) assign -> field_access . INCREMENT
+    (68) assign -> field_access . DECREMENT
+    (70) method_invocation -> field_access . ( arguments )
+    (71) method_invocation -> field_access . ( )
+    (80) primary -> field_access .
+
+    ASSIGN          shift and go to state 116
+    INCREMENT       shift and go to state 117
+    DECREMENT       shift and go to state 118
+    (               shift and go to state 119
+    .               reduce using rule 80 (primary -> field_access .)
+
+
+state 80
+
+    (67) assign -> INCREMENT . field_access
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    ID              shift and go to state 102
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    field_access                   shift and go to state 120
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+    method_invocation              shift and go to state 104
+
+state 81
+
+    (69) assign -> DECREMENT . field_access
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    ID              shift and go to state 102
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    field_access                   shift and go to state 121
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+    method_invocation              shift and go to state 104
+
+state 82
+
+    (14) type -> ID .
+    (64) field_access -> ID .
+
+    ID              reduce using rule 14 (type -> ID .)
+    ASSIGN          reduce using rule 64 (field_access -> ID .)
+    INCREMENT       reduce using rule 64 (field_access -> ID .)
+    DECREMENT       reduce using rule 64 (field_access -> ID .)
+    (               reduce using rule 64 (field_access -> ID .)
+    .               reduce using rule 64 (field_access -> ID .)
+
+
+state 83
+
+    (63) field_access -> primary . . ID
+
+    .               shift and go to state 122
+
+
+state 84
+
+    (74) primary -> literal .
+
+    .               reduce using rule 74 (primary -> literal .)
+    )               reduce using rule 74 (primary -> literal .)
+    PLUS            reduce using rule 74 (primary -> literal .)
+    MINUS           reduce using rule 74 (primary -> literal .)
+    TIMES           reduce using rule 74 (primary -> literal .)
+    DIVIDE          reduce using rule 74 (primary -> literal .)
+    AND             reduce using rule 74 (primary -> literal .)
+    OR              reduce using rule 74 (primary -> literal .)
+    EQUALITY        reduce using rule 74 (primary -> literal .)
+    NOT_EQUAL       reduce using rule 74 (primary -> literal .)
+    LESSER          reduce using rule 74 (primary -> literal .)
+    GREATER         reduce using rule 74 (primary -> literal .)
+    LESSER_EQ       reduce using rule 74 (primary -> literal .)
+    GREATER_EQ      reduce using rule 74 (primary -> literal .)
+    ;               reduce using rule 74 (primary -> literal .)
+    ,               reduce using rule 74 (primary -> literal .)
+
+
+state 85
+
+    (75) primary -> THIS .
+
+    .               reduce using rule 75 (primary -> THIS .)
+    )               reduce using rule 75 (primary -> THIS .)
+    PLUS            reduce using rule 75 (primary -> THIS .)
+    MINUS           reduce using rule 75 (primary -> THIS .)
+    TIMES           reduce using rule 75 (primary -> THIS .)
+    DIVIDE          reduce using rule 75 (primary -> THIS .)
+    AND             reduce using rule 75 (primary -> THIS .)
+    OR              reduce using rule 75 (primary -> THIS .)
+    EQUALITY        reduce using rule 75 (primary -> THIS .)
+    NOT_EQUAL       reduce using rule 75 (primary -> THIS .)
+    LESSER          reduce using rule 75 (primary -> THIS .)
+    GREATER         reduce using rule 75 (primary -> THIS .)
+    LESSER_EQ       reduce using rule 75 (primary -> THIS .)
+    GREATER_EQ      reduce using rule 75 (primary -> THIS .)
+    ;               reduce using rule 75 (primary -> THIS .)
+    ,               reduce using rule 75 (primary -> THIS .)
+
+
+state 86
+
+    (76) primary -> SUPER .
+
+    .               reduce using rule 76 (primary -> SUPER .)
+    )               reduce using rule 76 (primary -> SUPER .)
+    PLUS            reduce using rule 76 (primary -> SUPER .)
+    MINUS           reduce using rule 76 (primary -> SUPER .)
+    TIMES           reduce using rule 76 (primary -> SUPER .)
+    DIVIDE          reduce using rule 76 (primary -> SUPER .)
+    AND             reduce using rule 76 (primary -> SUPER .)
+    OR              reduce using rule 76 (primary -> SUPER .)
+    EQUALITY        reduce using rule 76 (primary -> SUPER .)
+    NOT_EQUAL       reduce using rule 76 (primary -> SUPER .)
+    LESSER          reduce using rule 76 (primary -> SUPER .)
+    GREATER         reduce using rule 76 (primary -> SUPER .)
+    LESSER_EQ       reduce using rule 76 (primary -> SUPER .)
+    GREATER_EQ      reduce using rule 76 (primary -> SUPER .)
+    ;               reduce using rule 76 (primary -> SUPER .)
+    ,               reduce using rule 76 (primary -> SUPER .)
+
+
+state 87
+
+    (78) primary -> NEW . ID ( arguments )
+    (79) primary -> NEW . ID ( )
+
+    ID              shift and go to state 123
+
+
+state 88
+
+    (52) literal -> INT_CONST .
+
+    .               reduce using rule 52 (literal -> INT_CONST .)
+    )               reduce using rule 52 (literal -> INT_CONST .)
+    PLUS            reduce using rule 52 (literal -> INT_CONST .)
+    MINUS           reduce using rule 52 (literal -> INT_CONST .)
+    TIMES           reduce using rule 52 (literal -> INT_CONST .)
+    DIVIDE          reduce using rule 52 (literal -> INT_CONST .)
+    AND             reduce using rule 52 (literal -> INT_CONST .)
+    OR              reduce using rule 52 (literal -> INT_CONST .)
+    EQUALITY        reduce using rule 52 (literal -> INT_CONST .)
+    NOT_EQUAL       reduce using rule 52 (literal -> INT_CONST .)
+    LESSER          reduce using rule 52 (literal -> INT_CONST .)
+    GREATER         reduce using rule 52 (literal -> INT_CONST .)
+    LESSER_EQ       reduce using rule 52 (literal -> INT_CONST .)
+    GREATER_EQ      reduce using rule 52 (literal -> INT_CONST .)
+    ;               reduce using rule 52 (literal -> INT_CONST .)
+    ,               reduce using rule 52 (literal -> INT_CONST .)
+
+
+state 89
+
+    (53) literal -> FLOAT_CONST .
+
+    .               reduce using rule 53 (literal -> FLOAT_CONST .)
+    )               reduce using rule 53 (literal -> FLOAT_CONST .)
+    PLUS            reduce using rule 53 (literal -> FLOAT_CONST .)
+    MINUS           reduce using rule 53 (literal -> FLOAT_CONST .)
+    TIMES           reduce using rule 53 (literal -> FLOAT_CONST .)
+    DIVIDE          reduce using rule 53 (literal -> FLOAT_CONST .)
+    AND             reduce using rule 53 (literal -> FLOAT_CONST .)
+    OR              reduce using rule 53 (literal -> FLOAT_CONST .)
+    EQUALITY        reduce using rule 53 (literal -> FLOAT_CONST .)
+    NOT_EQUAL       reduce using rule 53 (literal -> FLOAT_CONST .)
+    LESSER          reduce using rule 53 (literal -> FLOAT_CONST .)
+    GREATER         reduce using rule 53 (literal -> FLOAT_CONST .)
+    LESSER_EQ       reduce using rule 53 (literal -> FLOAT_CONST .)
+    GREATER_EQ      reduce using rule 53 (literal -> FLOAT_CONST .)
+    ;               reduce using rule 53 (literal -> FLOAT_CONST .)
+    ,               reduce using rule 53 (literal -> FLOAT_CONST .)
+
+
+state 90
+
+    (54) literal -> STRING_CONST .
+
+    .               reduce using rule 54 (literal -> STRING_CONST .)
+    )               reduce using rule 54 (literal -> STRING_CONST .)
+    PLUS            reduce using rule 54 (literal -> STRING_CONST .)
+    MINUS           reduce using rule 54 (literal -> STRING_CONST .)
+    TIMES           reduce using rule 54 (literal -> STRING_CONST .)
+    DIVIDE          reduce using rule 54 (literal -> STRING_CONST .)
+    AND             reduce using rule 54 (literal -> STRING_CONST .)
+    OR              reduce using rule 54 (literal -> STRING_CONST .)
+    EQUALITY        reduce using rule 54 (literal -> STRING_CONST .)
+    NOT_EQUAL       reduce using rule 54 (literal -> STRING_CONST .)
+    LESSER          reduce using rule 54 (literal -> STRING_CONST .)
+    GREATER         reduce using rule 54 (literal -> STRING_CONST .)
+    LESSER_EQ       reduce using rule 54 (literal -> STRING_CONST .)
+    GREATER_EQ      reduce using rule 54 (literal -> STRING_CONST .)
+    ;               reduce using rule 54 (literal -> STRING_CONST .)
+    ,               reduce using rule 54 (literal -> STRING_CONST .)
+
+
+state 91
+
+    (55) literal -> NULL .
+
+    .               reduce using rule 55 (literal -> NULL .)
+    )               reduce using rule 55 (literal -> NULL .)
+    PLUS            reduce using rule 55 (literal -> NULL .)
+    MINUS           reduce using rule 55 (literal -> NULL .)
+    TIMES           reduce using rule 55 (literal -> NULL .)
+    DIVIDE          reduce using rule 55 (literal -> NULL .)
+    AND             reduce using rule 55 (literal -> NULL .)
+    OR              reduce using rule 55 (literal -> NULL .)
+    EQUALITY        reduce using rule 55 (literal -> NULL .)
+    NOT_EQUAL       reduce using rule 55 (literal -> NULL .)
+    LESSER          reduce using rule 55 (literal -> NULL .)
+    GREATER         reduce using rule 55 (literal -> NULL .)
+    LESSER_EQ       reduce using rule 55 (literal -> NULL .)
+    GREATER_EQ      reduce using rule 55 (literal -> NULL .)
+    ;               reduce using rule 55 (literal -> NULL .)
+    ,               reduce using rule 55 (literal -> NULL .)
+
+
+state 92
+
+    (56) literal -> TRUE .
+
+    .               reduce using rule 56 (literal -> TRUE .)
+    )               reduce using rule 56 (literal -> TRUE .)
+    PLUS            reduce using rule 56 (literal -> TRUE .)
+    MINUS           reduce using rule 56 (literal -> TRUE .)
+    TIMES           reduce using rule 56 (literal -> TRUE .)
+    DIVIDE          reduce using rule 56 (literal -> TRUE .)
+    AND             reduce using rule 56 (literal -> TRUE .)
+    OR              reduce using rule 56 (literal -> TRUE .)
+    EQUALITY        reduce using rule 56 (literal -> TRUE .)
+    NOT_EQUAL       reduce using rule 56 (literal -> TRUE .)
+    LESSER          reduce using rule 56 (literal -> TRUE .)
+    GREATER         reduce using rule 56 (literal -> TRUE .)
+    LESSER_EQ       reduce using rule 56 (literal -> TRUE .)
+    GREATER_EQ      reduce using rule 56 (literal -> TRUE .)
+    ;               reduce using rule 56 (literal -> TRUE .)
+    ,               reduce using rule 56 (literal -> TRUE .)
+
+
+state 93
+
+    (57) literal -> FALSE .
+
+    .               reduce using rule 57 (literal -> FALSE .)
+    )               reduce using rule 57 (literal -> FALSE .)
+    PLUS            reduce using rule 57 (literal -> FALSE .)
+    MINUS           reduce using rule 57 (literal -> FALSE .)
+    TIMES           reduce using rule 57 (literal -> FALSE .)
+    DIVIDE          reduce using rule 57 (literal -> FALSE .)
+    AND             reduce using rule 57 (literal -> FALSE .)
+    OR              reduce using rule 57 (literal -> FALSE .)
+    EQUALITY        reduce using rule 57 (literal -> FALSE .)
+    NOT_EQUAL       reduce using rule 57 (literal -> FALSE .)
+    LESSER          reduce using rule 57 (literal -> FALSE .)
+    GREATER         reduce using rule 57 (literal -> FALSE .)
+    LESSER_EQ       reduce using rule 57 (literal -> FALSE .)
+    GREATER_EQ      reduce using rule 57 (literal -> FALSE .)
+    ;               reduce using rule 57 (literal -> FALSE .)
+    ,               reduce using rule 57 (literal -> FALSE .)
+
+
+state 94
+
+    (27) method_decl -> modifier VOID ID ( optional_formals ) block .
+
+    }               reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    PRIVATE         reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    PUBLIC          reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    STATIC          reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    VOID            reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    ID              reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    INT             reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    FLOAT           reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+    BOOLEAN         reduce using rule 27 (method_decl -> modifier VOID ID ( optional_formals ) block .)
+
+
+state 95
+
+    (34) block -> { optional_stmts } .
+
+    }               reduce using rule 34 (block -> { optional_stmts } .)
+    PRIVATE         reduce using rule 34 (block -> { optional_stmts } .)
+    PUBLIC          reduce using rule 34 (block -> { optional_stmts } .)
+    STATIC          reduce using rule 34 (block -> { optional_stmts } .)
+    VOID            reduce using rule 34 (block -> { optional_stmts } .)
+    ID              reduce using rule 34 (block -> { optional_stmts } .)
+    INT             reduce using rule 34 (block -> { optional_stmts } .)
+    FLOAT           reduce using rule 34 (block -> { optional_stmts } .)
+    BOOLEAN         reduce using rule 34 (block -> { optional_stmts } .)
+    IF              reduce using rule 34 (block -> { optional_stmts } .)
+    WHILE           reduce using rule 34 (block -> { optional_stmts } .)
+    FOR             reduce using rule 34 (block -> { optional_stmts } .)
+    RETURN          reduce using rule 34 (block -> { optional_stmts } .)
+    BREAK           reduce using rule 34 (block -> { optional_stmts } .)
+    CONTINUE        reduce using rule 34 (block -> { optional_stmts } .)
+    ;               reduce using rule 34 (block -> { optional_stmts } .)
+    {               reduce using rule 34 (block -> { optional_stmts } .)
+    INCREMENT       reduce using rule 34 (block -> { optional_stmts } .)
+    DECREMENT       reduce using rule 34 (block -> { optional_stmts } .)
+    THIS            reduce using rule 34 (block -> { optional_stmts } .)
+    SUPER           reduce using rule 34 (block -> { optional_stmts } .)
+    (               reduce using rule 34 (block -> { optional_stmts } .)
+    NEW             reduce using rule 34 (block -> { optional_stmts } .)
+    INT_CONST       reduce using rule 34 (block -> { optional_stmts } .)
+    FLOAT_CONST     reduce using rule 34 (block -> { optional_stmts } .)
+    STRING_CONST    reduce using rule 34 (block -> { optional_stmts } .)
+    NULL            reduce using rule 34 (block -> { optional_stmts } .)
+    TRUE            reduce using rule 34 (block -> { optional_stmts } .)
+    FALSE           reduce using rule 34 (block -> { optional_stmts } .)
+    ELSE            reduce using rule 34 (block -> { optional_stmts } .)
+
+
+state 96
+
+    (35) optional_stmts -> stmt optional_stmts .
+
+    }               reduce using rule 35 (optional_stmts -> stmt optional_stmts .)
+
+
+state 97
+
+    (37) stmt -> IF ( . expr ) stmt ELSE stmt
+    (38) stmt -> IF ( . expr ) stmt
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 124
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 98
+
+    (77) primary -> ( expr . )
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    )               shift and go to state 125
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 99
+
+    (58) expr -> primary .
+    (63) field_access -> primary . . ID
+
+    )               reduce using rule 58 (expr -> primary .)
+    PLUS            reduce using rule 58 (expr -> primary .)
+    MINUS           reduce using rule 58 (expr -> primary .)
+    TIMES           reduce using rule 58 (expr -> primary .)
+    DIVIDE          reduce using rule 58 (expr -> primary .)
+    AND             reduce using rule 58 (expr -> primary .)
+    OR              reduce using rule 58 (expr -> primary .)
+    EQUALITY        reduce using rule 58 (expr -> primary .)
+    NOT_EQUAL       reduce using rule 58 (expr -> primary .)
+    LESSER          reduce using rule 58 (expr -> primary .)
+    GREATER         reduce using rule 58 (expr -> primary .)
+    LESSER_EQ       reduce using rule 58 (expr -> primary .)
+    GREATER_EQ      reduce using rule 58 (expr -> primary .)
+    ;               reduce using rule 58 (expr -> primary .)
+    ,               reduce using rule 58 (expr -> primary .)
+    .               shift and go to state 122
+
+
+state 100
+
+    (59) expr -> assign .
+
+    )               reduce using rule 59 (expr -> assign .)
+    PLUS            reduce using rule 59 (expr -> assign .)
+    MINUS           reduce using rule 59 (expr -> assign .)
+    TIMES           reduce using rule 59 (expr -> assign .)
+    DIVIDE          reduce using rule 59 (expr -> assign .)
+    AND             reduce using rule 59 (expr -> assign .)
+    OR              reduce using rule 59 (expr -> assign .)
+    EQUALITY        reduce using rule 59 (expr -> assign .)
+    NOT_EQUAL       reduce using rule 59 (expr -> assign .)
+    LESSER          reduce using rule 59 (expr -> assign .)
+    GREATER         reduce using rule 59 (expr -> assign .)
+    LESSER_EQ       reduce using rule 59 (expr -> assign .)
+    GREATER_EQ      reduce using rule 59 (expr -> assign .)
+    ;               reduce using rule 59 (expr -> assign .)
+    ,               reduce using rule 59 (expr -> assign .)
+
+
+state 101
+
+    (62) expr -> unary_op . expr
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    unary_op                       shift and go to state 101
+    expr                           shift and go to state 140
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 102
+
+    (64) field_access -> ID .
+
+    ASSIGN          reduce using rule 64 (field_access -> ID .)
+    INCREMENT       reduce using rule 64 (field_access -> ID .)
+    DECREMENT       reduce using rule 64 (field_access -> ID .)
+    (               reduce using rule 64 (field_access -> ID .)
+    .               reduce using rule 64 (field_access -> ID .)
+    )               reduce using rule 64 (field_access -> ID .)
+    PLUS            reduce using rule 64 (field_access -> ID .)
+    MINUS           reduce using rule 64 (field_access -> ID .)
+    TIMES           reduce using rule 64 (field_access -> ID .)
+    DIVIDE          reduce using rule 64 (field_access -> ID .)
+    AND             reduce using rule 64 (field_access -> ID .)
+    OR              reduce using rule 64 (field_access -> ID .)
+    EQUALITY        reduce using rule 64 (field_access -> ID .)
+    NOT_EQUAL       reduce using rule 64 (field_access -> ID .)
+    LESSER          reduce using rule 64 (field_access -> ID .)
+    GREATER         reduce using rule 64 (field_access -> ID .)
+    LESSER_EQ       reduce using rule 64 (field_access -> ID .)
+    GREATER_EQ      reduce using rule 64 (field_access -> ID .)
+    ;               reduce using rule 64 (field_access -> ID .)
+    ,               reduce using rule 64 (field_access -> ID .)
+
+
+state 103
+
+    (80) primary -> field_access .
+    (65) assign -> field_access . ASSIGN expr
+    (66) assign -> field_access . INCREMENT
+    (68) assign -> field_access . DECREMENT
+    (70) method_invocation -> field_access . ( arguments )
+    (71) method_invocation -> field_access . ( )
+
+    .               reduce using rule 80 (primary -> field_access .)
+    )               reduce using rule 80 (primary -> field_access .)
+    PLUS            reduce using rule 80 (primary -> field_access .)
+    MINUS           reduce using rule 80 (primary -> field_access .)
+    TIMES           reduce using rule 80 (primary -> field_access .)
+    DIVIDE          reduce using rule 80 (primary -> field_access .)
+    AND             reduce using rule 80 (primary -> field_access .)
+    OR              reduce using rule 80 (primary -> field_access .)
+    EQUALITY        reduce using rule 80 (primary -> field_access .)
+    NOT_EQUAL       reduce using rule 80 (primary -> field_access .)
+    LESSER          reduce using rule 80 (primary -> field_access .)
+    GREATER         reduce using rule 80 (primary -> field_access .)
+    LESSER_EQ       reduce using rule 80 (primary -> field_access .)
+    GREATER_EQ      reduce using rule 80 (primary -> field_access .)
+    ;               reduce using rule 80 (primary -> field_access .)
+    ,               reduce using rule 80 (primary -> field_access .)
+    ASSIGN          shift and go to state 116
+    INCREMENT       shift and go to state 117
+    DECREMENT       shift and go to state 118
+    (               shift and go to state 119
+
+
+state 104
+
+    (81) primary -> method_invocation .
+
+    .               reduce using rule 81 (primary -> method_invocation .)
+    )               reduce using rule 81 (primary -> method_invocation .)
+    PLUS            reduce using rule 81 (primary -> method_invocation .)
+    MINUS           reduce using rule 81 (primary -> method_invocation .)
+    TIMES           reduce using rule 81 (primary -> method_invocation .)
+    DIVIDE          reduce using rule 81 (primary -> method_invocation .)
+    AND             reduce using rule 81 (primary -> method_invocation .)
+    OR              reduce using rule 81 (primary -> method_invocation .)
+    EQUALITY        reduce using rule 81 (primary -> method_invocation .)
+    NOT_EQUAL       reduce using rule 81 (primary -> method_invocation .)
+    LESSER          reduce using rule 81 (primary -> method_invocation .)
+    GREATER         reduce using rule 81 (primary -> method_invocation .)
+    LESSER_EQ       reduce using rule 81 (primary -> method_invocation .)
+    GREATER_EQ      reduce using rule 81 (primary -> method_invocation .)
+    ;               reduce using rule 81 (primary -> method_invocation .)
+    ,               reduce using rule 81 (primary -> method_invocation .)
+
+
+state 105
+
+    (96) unary_op -> PLUS .
+
+    THIS            reduce using rule 96 (unary_op -> PLUS .)
+    SUPER           reduce using rule 96 (unary_op -> PLUS .)
+    (               reduce using rule 96 (unary_op -> PLUS .)
+    NEW             reduce using rule 96 (unary_op -> PLUS .)
+    INCREMENT       reduce using rule 96 (unary_op -> PLUS .)
+    DECREMENT       reduce using rule 96 (unary_op -> PLUS .)
+    PLUS            reduce using rule 96 (unary_op -> PLUS .)
+    MINUS           reduce using rule 96 (unary_op -> PLUS .)
+    NOT             reduce using rule 96 (unary_op -> PLUS .)
+    INT_CONST       reduce using rule 96 (unary_op -> PLUS .)
+    FLOAT_CONST     reduce using rule 96 (unary_op -> PLUS .)
+    STRING_CONST    reduce using rule 96 (unary_op -> PLUS .)
+    NULL            reduce using rule 96 (unary_op -> PLUS .)
+    TRUE            reduce using rule 96 (unary_op -> PLUS .)
+    FALSE           reduce using rule 96 (unary_op -> PLUS .)
+    ID              reduce using rule 96 (unary_op -> PLUS .)
+
+
+state 106
+
+    (97) unary_op -> MINUS .
+
+    THIS            reduce using rule 97 (unary_op -> MINUS .)
+    SUPER           reduce using rule 97 (unary_op -> MINUS .)
+    (               reduce using rule 97 (unary_op -> MINUS .)
+    NEW             reduce using rule 97 (unary_op -> MINUS .)
+    INCREMENT       reduce using rule 97 (unary_op -> MINUS .)
+    DECREMENT       reduce using rule 97 (unary_op -> MINUS .)
+    PLUS            reduce using rule 97 (unary_op -> MINUS .)
+    MINUS           reduce using rule 97 (unary_op -> MINUS .)
+    NOT             reduce using rule 97 (unary_op -> MINUS .)
+    INT_CONST       reduce using rule 97 (unary_op -> MINUS .)
+    FLOAT_CONST     reduce using rule 97 (unary_op -> MINUS .)
+    STRING_CONST    reduce using rule 97 (unary_op -> MINUS .)
+    NULL            reduce using rule 97 (unary_op -> MINUS .)
+    TRUE            reduce using rule 97 (unary_op -> MINUS .)
+    FALSE           reduce using rule 97 (unary_op -> MINUS .)
+    ID              reduce using rule 97 (unary_op -> MINUS .)
+
+
+state 107
+
+    (98) unary_op -> NOT .
+
+    THIS            reduce using rule 98 (unary_op -> NOT .)
+    SUPER           reduce using rule 98 (unary_op -> NOT .)
+    (               reduce using rule 98 (unary_op -> NOT .)
+    NEW             reduce using rule 98 (unary_op -> NOT .)
+    INCREMENT       reduce using rule 98 (unary_op -> NOT .)
+    DECREMENT       reduce using rule 98 (unary_op -> NOT .)
+    PLUS            reduce using rule 98 (unary_op -> NOT .)
+    MINUS           reduce using rule 98 (unary_op -> NOT .)
+    NOT             reduce using rule 98 (unary_op -> NOT .)
+    INT_CONST       reduce using rule 98 (unary_op -> NOT .)
+    FLOAT_CONST     reduce using rule 98 (unary_op -> NOT .)
+    STRING_CONST    reduce using rule 98 (unary_op -> NOT .)
+    NULL            reduce using rule 98 (unary_op -> NOT .)
+    TRUE            reduce using rule 98 (unary_op -> NOT .)
+    FALSE           reduce using rule 98 (unary_op -> NOT .)
+    ID              reduce using rule 98 (unary_op -> NOT .)
+
+
+state 108
+
+    (39) stmt -> WHILE ( . expr ) stmt
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 141
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 109
+
+    (40) stmt -> FOR ( . optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (50) optional_stmt_expr -> . stmt_expr
+    (51) optional_stmt_expr -> . empty
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (99) empty -> .
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    ;               reduce using rule 99 (empty -> .)
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    ID              shift and go to state 102
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    optional_stmt_expr             shift and go to state 142
+    stmt_expr                      shift and go to state 143
+    empty                          shift and go to state 144
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 110
+
+    (41) stmt -> RETURN optional_expr . ;
+
+    ;               shift and go to state 145
+
+
+state 111
+
+    (48) optional_expr -> expr .
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    ;               reduce using rule 48 (optional_expr -> expr .)
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 112
+
+    (49) optional_expr -> empty .
+
+    ;               reduce using rule 49 (optional_expr -> empty .)
+
+
+state 113
+
+    (42) stmt -> stmt_expr ; .
+
+    IF              reduce using rule 42 (stmt -> stmt_expr ; .)
+    WHILE           reduce using rule 42 (stmt -> stmt_expr ; .)
+    FOR             reduce using rule 42 (stmt -> stmt_expr ; .)
+    RETURN          reduce using rule 42 (stmt -> stmt_expr ; .)
+    BREAK           reduce using rule 42 (stmt -> stmt_expr ; .)
+    CONTINUE        reduce using rule 42 (stmt -> stmt_expr ; .)
+    ;               reduce using rule 42 (stmt -> stmt_expr ; .)
+    {               reduce using rule 42 (stmt -> stmt_expr ; .)
+    INCREMENT       reduce using rule 42 (stmt -> stmt_expr ; .)
+    DECREMENT       reduce using rule 42 (stmt -> stmt_expr ; .)
+    INT             reduce using rule 42 (stmt -> stmt_expr ; .)
+    FLOAT           reduce using rule 42 (stmt -> stmt_expr ; .)
+    BOOLEAN         reduce using rule 42 (stmt -> stmt_expr ; .)
+    ID              reduce using rule 42 (stmt -> stmt_expr ; .)
+    THIS            reduce using rule 42 (stmt -> stmt_expr ; .)
+    SUPER           reduce using rule 42 (stmt -> stmt_expr ; .)
+    (               reduce using rule 42 (stmt -> stmt_expr ; .)
+    NEW             reduce using rule 42 (stmt -> stmt_expr ; .)
+    INT_CONST       reduce using rule 42 (stmt -> stmt_expr ; .)
+    FLOAT_CONST     reduce using rule 42 (stmt -> stmt_expr ; .)
+    STRING_CONST    reduce using rule 42 (stmt -> stmt_expr ; .)
+    NULL            reduce using rule 42 (stmt -> stmt_expr ; .)
+    TRUE            reduce using rule 42 (stmt -> stmt_expr ; .)
+    FALSE           reduce using rule 42 (stmt -> stmt_expr ; .)
+    }               reduce using rule 42 (stmt -> stmt_expr ; .)
+    ELSE            reduce using rule 42 (stmt -> stmt_expr ; .)
+
+
+state 114
+
+    (43) stmt -> BREAK ; .
+
+    IF              reduce using rule 43 (stmt -> BREAK ; .)
+    WHILE           reduce using rule 43 (stmt -> BREAK ; .)
+    FOR             reduce using rule 43 (stmt -> BREAK ; .)
+    RETURN          reduce using rule 43 (stmt -> BREAK ; .)
+    BREAK           reduce using rule 43 (stmt -> BREAK ; .)
+    CONTINUE        reduce using rule 43 (stmt -> BREAK ; .)
+    ;               reduce using rule 43 (stmt -> BREAK ; .)
+    {               reduce using rule 43 (stmt -> BREAK ; .)
+    INCREMENT       reduce using rule 43 (stmt -> BREAK ; .)
+    DECREMENT       reduce using rule 43 (stmt -> BREAK ; .)
+    INT             reduce using rule 43 (stmt -> BREAK ; .)
+    FLOAT           reduce using rule 43 (stmt -> BREAK ; .)
+    BOOLEAN         reduce using rule 43 (stmt -> BREAK ; .)
+    ID              reduce using rule 43 (stmt -> BREAK ; .)
+    THIS            reduce using rule 43 (stmt -> BREAK ; .)
+    SUPER           reduce using rule 43 (stmt -> BREAK ; .)
+    (               reduce using rule 43 (stmt -> BREAK ; .)
+    NEW             reduce using rule 43 (stmt -> BREAK ; .)
+    INT_CONST       reduce using rule 43 (stmt -> BREAK ; .)
+    FLOAT_CONST     reduce using rule 43 (stmt -> BREAK ; .)
+    STRING_CONST    reduce using rule 43 (stmt -> BREAK ; .)
+    NULL            reduce using rule 43 (stmt -> BREAK ; .)
+    TRUE            reduce using rule 43 (stmt -> BREAK ; .)
+    FALSE           reduce using rule 43 (stmt -> BREAK ; .)
+    }               reduce using rule 43 (stmt -> BREAK ; .)
+    ELSE            reduce using rule 43 (stmt -> BREAK ; .)
+
+
+state 115
+
+    (44) stmt -> CONTINUE ; .
+
+    IF              reduce using rule 44 (stmt -> CONTINUE ; .)
+    WHILE           reduce using rule 44 (stmt -> CONTINUE ; .)
+    FOR             reduce using rule 44 (stmt -> CONTINUE ; .)
+    RETURN          reduce using rule 44 (stmt -> CONTINUE ; .)
+    BREAK           reduce using rule 44 (stmt -> CONTINUE ; .)
+    CONTINUE        reduce using rule 44 (stmt -> CONTINUE ; .)
+    ;               reduce using rule 44 (stmt -> CONTINUE ; .)
+    {               reduce using rule 44 (stmt -> CONTINUE ; .)
+    INCREMENT       reduce using rule 44 (stmt -> CONTINUE ; .)
+    DECREMENT       reduce using rule 44 (stmt -> CONTINUE ; .)
+    INT             reduce using rule 44 (stmt -> CONTINUE ; .)
+    FLOAT           reduce using rule 44 (stmt -> CONTINUE ; .)
+    BOOLEAN         reduce using rule 44 (stmt -> CONTINUE ; .)
+    ID              reduce using rule 44 (stmt -> CONTINUE ; .)
+    THIS            reduce using rule 44 (stmt -> CONTINUE ; .)
+    SUPER           reduce using rule 44 (stmt -> CONTINUE ; .)
+    (               reduce using rule 44 (stmt -> CONTINUE ; .)
+    NEW             reduce using rule 44 (stmt -> CONTINUE ; .)
+    INT_CONST       reduce using rule 44 (stmt -> CONTINUE ; .)
+    FLOAT_CONST     reduce using rule 44 (stmt -> CONTINUE ; .)
+    STRING_CONST    reduce using rule 44 (stmt -> CONTINUE ; .)
+    NULL            reduce using rule 44 (stmt -> CONTINUE ; .)
+    TRUE            reduce using rule 44 (stmt -> CONTINUE ; .)
+    FALSE           reduce using rule 44 (stmt -> CONTINUE ; .)
+    }               reduce using rule 44 (stmt -> CONTINUE ; .)
+    ELSE            reduce using rule 44 (stmt -> CONTINUE ; .)
+
+
+state 116
+
+    (65) assign -> field_access ASSIGN . expr
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    field_access                   shift and go to state 103
+    expr                           shift and go to state 146
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    method_invocation              shift and go to state 104
+
+state 117
+
+    (66) assign -> field_access INCREMENT .
+
+    ;               reduce using rule 66 (assign -> field_access INCREMENT .)
+    )               reduce using rule 66 (assign -> field_access INCREMENT .)
+    PLUS            reduce using rule 66 (assign -> field_access INCREMENT .)
+    MINUS           reduce using rule 66 (assign -> field_access INCREMENT .)
+    TIMES           reduce using rule 66 (assign -> field_access INCREMENT .)
+    DIVIDE          reduce using rule 66 (assign -> field_access INCREMENT .)
+    AND             reduce using rule 66 (assign -> field_access INCREMENT .)
+    OR              reduce using rule 66 (assign -> field_access INCREMENT .)
+    EQUALITY        reduce using rule 66 (assign -> field_access INCREMENT .)
+    NOT_EQUAL       reduce using rule 66 (assign -> field_access INCREMENT .)
+    LESSER          reduce using rule 66 (assign -> field_access INCREMENT .)
+    GREATER         reduce using rule 66 (assign -> field_access INCREMENT .)
+    LESSER_EQ       reduce using rule 66 (assign -> field_access INCREMENT .)
+    GREATER_EQ      reduce using rule 66 (assign -> field_access INCREMENT .)
+    ,               reduce using rule 66 (assign -> field_access INCREMENT .)
+
+
+state 118
+
+    (68) assign -> field_access DECREMENT .
+
+    ;               reduce using rule 68 (assign -> field_access DECREMENT .)
+    )               reduce using rule 68 (assign -> field_access DECREMENT .)
+    PLUS            reduce using rule 68 (assign -> field_access DECREMENT .)
+    MINUS           reduce using rule 68 (assign -> field_access DECREMENT .)
+    TIMES           reduce using rule 68 (assign -> field_access DECREMENT .)
+    DIVIDE          reduce using rule 68 (assign -> field_access DECREMENT .)
+    AND             reduce using rule 68 (assign -> field_access DECREMENT .)
+    OR              reduce using rule 68 (assign -> field_access DECREMENT .)
+    EQUALITY        reduce using rule 68 (assign -> field_access DECREMENT .)
+    NOT_EQUAL       reduce using rule 68 (assign -> field_access DECREMENT .)
+    LESSER          reduce using rule 68 (assign -> field_access DECREMENT .)
+    GREATER         reduce using rule 68 (assign -> field_access DECREMENT .)
+    LESSER_EQ       reduce using rule 68 (assign -> field_access DECREMENT .)
+    GREATER_EQ      reduce using rule 68 (assign -> field_access DECREMENT .)
+    ,               reduce using rule 68 (assign -> field_access DECREMENT .)
+
+
+state 119
+
+    (70) method_invocation -> field_access ( . arguments )
+    (71) method_invocation -> field_access ( . )
+    (72) arguments -> . expr
+    (73) arguments -> . expr , arguments
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    )               shift and go to state 148
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    field_access                   shift and go to state 103
+    arguments                      shift and go to state 147
+    expr                           shift and go to state 149
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    method_invocation              shift and go to state 104
+
+state 120
+
+    (67) assign -> INCREMENT field_access .
+    (80) primary -> field_access .
+    (70) method_invocation -> field_access . ( arguments )
+    (71) method_invocation -> field_access . ( )
+
+    ;               reduce using rule 67 (assign -> INCREMENT field_access .)
+    )               reduce using rule 67 (assign -> INCREMENT field_access .)
+    PLUS            reduce using rule 67 (assign -> INCREMENT field_access .)
+    MINUS           reduce using rule 67 (assign -> INCREMENT field_access .)
+    TIMES           reduce using rule 67 (assign -> INCREMENT field_access .)
+    DIVIDE          reduce using rule 67 (assign -> INCREMENT field_access .)
+    AND             reduce using rule 67 (assign -> INCREMENT field_access .)
+    OR              reduce using rule 67 (assign -> INCREMENT field_access .)
+    EQUALITY        reduce using rule 67 (assign -> INCREMENT field_access .)
+    NOT_EQUAL       reduce using rule 67 (assign -> INCREMENT field_access .)
+    LESSER          reduce using rule 67 (assign -> INCREMENT field_access .)
+    GREATER         reduce using rule 67 (assign -> INCREMENT field_access .)
+    LESSER_EQ       reduce using rule 67 (assign -> INCREMENT field_access .)
+    GREATER_EQ      reduce using rule 67 (assign -> INCREMENT field_access .)
+    ,               reduce using rule 67 (assign -> INCREMENT field_access .)
+    .               reduce using rule 80 (primary -> field_access .)
+    (               shift and go to state 119
+
+
+state 121
+
+    (69) assign -> DECREMENT field_access .
+    (80) primary -> field_access .
+    (70) method_invocation -> field_access . ( arguments )
+    (71) method_invocation -> field_access . ( )
+
+    ;               reduce using rule 69 (assign -> DECREMENT field_access .)
+    )               reduce using rule 69 (assign -> DECREMENT field_access .)
+    PLUS            reduce using rule 69 (assign -> DECREMENT field_access .)
+    MINUS           reduce using rule 69 (assign -> DECREMENT field_access .)
+    TIMES           reduce using rule 69 (assign -> DECREMENT field_access .)
+    DIVIDE          reduce using rule 69 (assign -> DECREMENT field_access .)
+    AND             reduce using rule 69 (assign -> DECREMENT field_access .)
+    OR              reduce using rule 69 (assign -> DECREMENT field_access .)
+    EQUALITY        reduce using rule 69 (assign -> DECREMENT field_access .)
+    NOT_EQUAL       reduce using rule 69 (assign -> DECREMENT field_access .)
+    LESSER          reduce using rule 69 (assign -> DECREMENT field_access .)
+    GREATER         reduce using rule 69 (assign -> DECREMENT field_access .)
+    LESSER_EQ       reduce using rule 69 (assign -> DECREMENT field_access .)
+    GREATER_EQ      reduce using rule 69 (assign -> DECREMENT field_access .)
+    ,               reduce using rule 69 (assign -> DECREMENT field_access .)
+    .               reduce using rule 80 (primary -> field_access .)
+    (               shift and go to state 119
+
+
+state 122
+
+    (63) field_access -> primary . . ID
+
+    ID              shift and go to state 150
+
+
+state 123
+
+    (78) primary -> NEW ID . ( arguments )
+    (79) primary -> NEW ID . ( )
+
+    (               shift and go to state 151
+
+
+state 124
+
+    (37) stmt -> IF ( expr . ) stmt ELSE stmt
+    (38) stmt -> IF ( expr . ) stmt
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    )               shift and go to state 152
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 125
+
+    (77) primary -> ( expr ) .
+
+    .               reduce using rule 77 (primary -> ( expr ) .)
+    )               reduce using rule 77 (primary -> ( expr ) .)
+    PLUS            reduce using rule 77 (primary -> ( expr ) .)
+    MINUS           reduce using rule 77 (primary -> ( expr ) .)
+    TIMES           reduce using rule 77 (primary -> ( expr ) .)
+    DIVIDE          reduce using rule 77 (primary -> ( expr ) .)
+    AND             reduce using rule 77 (primary -> ( expr ) .)
+    OR              reduce using rule 77 (primary -> ( expr ) .)
+    EQUALITY        reduce using rule 77 (primary -> ( expr ) .)
+    NOT_EQUAL       reduce using rule 77 (primary -> ( expr ) .)
+    LESSER          reduce using rule 77 (primary -> ( expr ) .)
+    GREATER         reduce using rule 77 (primary -> ( expr ) .)
+    LESSER_EQ       reduce using rule 77 (primary -> ( expr ) .)
+    GREATER_EQ      reduce using rule 77 (primary -> ( expr ) .)
+    ;               reduce using rule 77 (primary -> ( expr ) .)
+    ,               reduce using rule 77 (primary -> ( expr ) .)
+
+
+state 126
+
+    (60) expr -> expr arith_op . expr
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 153
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 127
+
+    (61) expr -> expr bool_op . expr
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 154
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 128
+
+    (84) arith_op -> PLUS .
+
+    THIS            reduce using rule 84 (arith_op -> PLUS .)
+    SUPER           reduce using rule 84 (arith_op -> PLUS .)
+    (               reduce using rule 84 (arith_op -> PLUS .)
+    NEW             reduce using rule 84 (arith_op -> PLUS .)
+    INCREMENT       reduce using rule 84 (arith_op -> PLUS .)
+    DECREMENT       reduce using rule 84 (arith_op -> PLUS .)
+    PLUS            reduce using rule 84 (arith_op -> PLUS .)
+    MINUS           reduce using rule 84 (arith_op -> PLUS .)
+    NOT             reduce using rule 84 (arith_op -> PLUS .)
+    INT_CONST       reduce using rule 84 (arith_op -> PLUS .)
+    FLOAT_CONST     reduce using rule 84 (arith_op -> PLUS .)
+    STRING_CONST    reduce using rule 84 (arith_op -> PLUS .)
+    NULL            reduce using rule 84 (arith_op -> PLUS .)
+    TRUE            reduce using rule 84 (arith_op -> PLUS .)
+    FALSE           reduce using rule 84 (arith_op -> PLUS .)
+    ID              reduce using rule 84 (arith_op -> PLUS .)
+
+
+state 129
+
+    (85) arith_op -> MINUS .
+
+    THIS            reduce using rule 85 (arith_op -> MINUS .)
+    SUPER           reduce using rule 85 (arith_op -> MINUS .)
+    (               reduce using rule 85 (arith_op -> MINUS .)
+    NEW             reduce using rule 85 (arith_op -> MINUS .)
+    INCREMENT       reduce using rule 85 (arith_op -> MINUS .)
+    DECREMENT       reduce using rule 85 (arith_op -> MINUS .)
+    PLUS            reduce using rule 85 (arith_op -> MINUS .)
+    MINUS           reduce using rule 85 (arith_op -> MINUS .)
+    NOT             reduce using rule 85 (arith_op -> MINUS .)
+    INT_CONST       reduce using rule 85 (arith_op -> MINUS .)
+    FLOAT_CONST     reduce using rule 85 (arith_op -> MINUS .)
+    STRING_CONST    reduce using rule 85 (arith_op -> MINUS .)
+    NULL            reduce using rule 85 (arith_op -> MINUS .)
+    TRUE            reduce using rule 85 (arith_op -> MINUS .)
+    FALSE           reduce using rule 85 (arith_op -> MINUS .)
+    ID              reduce using rule 85 (arith_op -> MINUS .)
+
+
+state 130
+
+    (86) arith_op -> TIMES .
+
+    THIS            reduce using rule 86 (arith_op -> TIMES .)
+    SUPER           reduce using rule 86 (arith_op -> TIMES .)
+    (               reduce using rule 86 (arith_op -> TIMES .)
+    NEW             reduce using rule 86 (arith_op -> TIMES .)
+    INCREMENT       reduce using rule 86 (arith_op -> TIMES .)
+    DECREMENT       reduce using rule 86 (arith_op -> TIMES .)
+    PLUS            reduce using rule 86 (arith_op -> TIMES .)
+    MINUS           reduce using rule 86 (arith_op -> TIMES .)
+    NOT             reduce using rule 86 (arith_op -> TIMES .)
+    INT_CONST       reduce using rule 86 (arith_op -> TIMES .)
+    FLOAT_CONST     reduce using rule 86 (arith_op -> TIMES .)
+    STRING_CONST    reduce using rule 86 (arith_op -> TIMES .)
+    NULL            reduce using rule 86 (arith_op -> TIMES .)
+    TRUE            reduce using rule 86 (arith_op -> TIMES .)
+    FALSE           reduce using rule 86 (arith_op -> TIMES .)
+    ID              reduce using rule 86 (arith_op -> TIMES .)
+
+
+state 131
+
+    (87) arith_op -> DIVIDE .
+
+    THIS            reduce using rule 87 (arith_op -> DIVIDE .)
+    SUPER           reduce using rule 87 (arith_op -> DIVIDE .)
+    (               reduce using rule 87 (arith_op -> DIVIDE .)
+    NEW             reduce using rule 87 (arith_op -> DIVIDE .)
+    INCREMENT       reduce using rule 87 (arith_op -> DIVIDE .)
+    DECREMENT       reduce using rule 87 (arith_op -> DIVIDE .)
+    PLUS            reduce using rule 87 (arith_op -> DIVIDE .)
+    MINUS           reduce using rule 87 (arith_op -> DIVIDE .)
+    NOT             reduce using rule 87 (arith_op -> DIVIDE .)
+    INT_CONST       reduce using rule 87 (arith_op -> DIVIDE .)
+    FLOAT_CONST     reduce using rule 87 (arith_op -> DIVIDE .)
+    STRING_CONST    reduce using rule 87 (arith_op -> DIVIDE .)
+    NULL            reduce using rule 87 (arith_op -> DIVIDE .)
+    TRUE            reduce using rule 87 (arith_op -> DIVIDE .)
+    FALSE           reduce using rule 87 (arith_op -> DIVIDE .)
+    ID              reduce using rule 87 (arith_op -> DIVIDE .)
+
+
+state 132
+
+    (88) bool_op -> AND .
+
+    THIS            reduce using rule 88 (bool_op -> AND .)
+    SUPER           reduce using rule 88 (bool_op -> AND .)
+    (               reduce using rule 88 (bool_op -> AND .)
+    NEW             reduce using rule 88 (bool_op -> AND .)
+    INCREMENT       reduce using rule 88 (bool_op -> AND .)
+    DECREMENT       reduce using rule 88 (bool_op -> AND .)
+    PLUS            reduce using rule 88 (bool_op -> AND .)
+    MINUS           reduce using rule 88 (bool_op -> AND .)
+    NOT             reduce using rule 88 (bool_op -> AND .)
+    INT_CONST       reduce using rule 88 (bool_op -> AND .)
+    FLOAT_CONST     reduce using rule 88 (bool_op -> AND .)
+    STRING_CONST    reduce using rule 88 (bool_op -> AND .)
+    NULL            reduce using rule 88 (bool_op -> AND .)
+    TRUE            reduce using rule 88 (bool_op -> AND .)
+    FALSE           reduce using rule 88 (bool_op -> AND .)
+    ID              reduce using rule 88 (bool_op -> AND .)
+
+
+state 133
+
+    (89) bool_op -> OR .
+
+    THIS            reduce using rule 89 (bool_op -> OR .)
+    SUPER           reduce using rule 89 (bool_op -> OR .)
+    (               reduce using rule 89 (bool_op -> OR .)
+    NEW             reduce using rule 89 (bool_op -> OR .)
+    INCREMENT       reduce using rule 89 (bool_op -> OR .)
+    DECREMENT       reduce using rule 89 (bool_op -> OR .)
+    PLUS            reduce using rule 89 (bool_op -> OR .)
+    MINUS           reduce using rule 89 (bool_op -> OR .)
+    NOT             reduce using rule 89 (bool_op -> OR .)
+    INT_CONST       reduce using rule 89 (bool_op -> OR .)
+    FLOAT_CONST     reduce using rule 89 (bool_op -> OR .)
+    STRING_CONST    reduce using rule 89 (bool_op -> OR .)
+    NULL            reduce using rule 89 (bool_op -> OR .)
+    TRUE            reduce using rule 89 (bool_op -> OR .)
+    FALSE           reduce using rule 89 (bool_op -> OR .)
+    ID              reduce using rule 89 (bool_op -> OR .)
+
+
+state 134
+
+    (90) bool_op -> EQUALITY .
+
+    THIS            reduce using rule 90 (bool_op -> EQUALITY .)
+    SUPER           reduce using rule 90 (bool_op -> EQUALITY .)
+    (               reduce using rule 90 (bool_op -> EQUALITY .)
+    NEW             reduce using rule 90 (bool_op -> EQUALITY .)
+    INCREMENT       reduce using rule 90 (bool_op -> EQUALITY .)
+    DECREMENT       reduce using rule 90 (bool_op -> EQUALITY .)
+    PLUS            reduce using rule 90 (bool_op -> EQUALITY .)
+    MINUS           reduce using rule 90 (bool_op -> EQUALITY .)
+    NOT             reduce using rule 90 (bool_op -> EQUALITY .)
+    INT_CONST       reduce using rule 90 (bool_op -> EQUALITY .)
+    FLOAT_CONST     reduce using rule 90 (bool_op -> EQUALITY .)
+    STRING_CONST    reduce using rule 90 (bool_op -> EQUALITY .)
+    NULL            reduce using rule 90 (bool_op -> EQUALITY .)
+    TRUE            reduce using rule 90 (bool_op -> EQUALITY .)
+    FALSE           reduce using rule 90 (bool_op -> EQUALITY .)
+    ID              reduce using rule 90 (bool_op -> EQUALITY .)
+
+
+state 135
+
+    (91) bool_op -> NOT_EQUAL .
+
+    THIS            reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    SUPER           reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    (               reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    NEW             reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    INCREMENT       reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    DECREMENT       reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    PLUS            reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    MINUS           reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    NOT             reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    INT_CONST       reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    FLOAT_CONST     reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    STRING_CONST    reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    NULL            reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    TRUE            reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    FALSE           reduce using rule 91 (bool_op -> NOT_EQUAL .)
+    ID              reduce using rule 91 (bool_op -> NOT_EQUAL .)
+
+
+state 136
+
+    (92) bool_op -> LESSER .
+
+    THIS            reduce using rule 92 (bool_op -> LESSER .)
+    SUPER           reduce using rule 92 (bool_op -> LESSER .)
+    (               reduce using rule 92 (bool_op -> LESSER .)
+    NEW             reduce using rule 92 (bool_op -> LESSER .)
+    INCREMENT       reduce using rule 92 (bool_op -> LESSER .)
+    DECREMENT       reduce using rule 92 (bool_op -> LESSER .)
+    PLUS            reduce using rule 92 (bool_op -> LESSER .)
+    MINUS           reduce using rule 92 (bool_op -> LESSER .)
+    NOT             reduce using rule 92 (bool_op -> LESSER .)
+    INT_CONST       reduce using rule 92 (bool_op -> LESSER .)
+    FLOAT_CONST     reduce using rule 92 (bool_op -> LESSER .)
+    STRING_CONST    reduce using rule 92 (bool_op -> LESSER .)
+    NULL            reduce using rule 92 (bool_op -> LESSER .)
+    TRUE            reduce using rule 92 (bool_op -> LESSER .)
+    FALSE           reduce using rule 92 (bool_op -> LESSER .)
+    ID              reduce using rule 92 (bool_op -> LESSER .)
+
+
+state 137
+
+    (93) bool_op -> GREATER .
+
+    THIS            reduce using rule 93 (bool_op -> GREATER .)
+    SUPER           reduce using rule 93 (bool_op -> GREATER .)
+    (               reduce using rule 93 (bool_op -> GREATER .)
+    NEW             reduce using rule 93 (bool_op -> GREATER .)
+    INCREMENT       reduce using rule 93 (bool_op -> GREATER .)
+    DECREMENT       reduce using rule 93 (bool_op -> GREATER .)
+    PLUS            reduce using rule 93 (bool_op -> GREATER .)
+    MINUS           reduce using rule 93 (bool_op -> GREATER .)
+    NOT             reduce using rule 93 (bool_op -> GREATER .)
+    INT_CONST       reduce using rule 93 (bool_op -> GREATER .)
+    FLOAT_CONST     reduce using rule 93 (bool_op -> GREATER .)
+    STRING_CONST    reduce using rule 93 (bool_op -> GREATER .)
+    NULL            reduce using rule 93 (bool_op -> GREATER .)
+    TRUE            reduce using rule 93 (bool_op -> GREATER .)
+    FALSE           reduce using rule 93 (bool_op -> GREATER .)
+    ID              reduce using rule 93 (bool_op -> GREATER .)
+
+
+state 138
+
+    (94) bool_op -> LESSER_EQ .
+
+    THIS            reduce using rule 94 (bool_op -> LESSER_EQ .)
+    SUPER           reduce using rule 94 (bool_op -> LESSER_EQ .)
+    (               reduce using rule 94 (bool_op -> LESSER_EQ .)
+    NEW             reduce using rule 94 (bool_op -> LESSER_EQ .)
+    INCREMENT       reduce using rule 94 (bool_op -> LESSER_EQ .)
+    DECREMENT       reduce using rule 94 (bool_op -> LESSER_EQ .)
+    PLUS            reduce using rule 94 (bool_op -> LESSER_EQ .)
+    MINUS           reduce using rule 94 (bool_op -> LESSER_EQ .)
+    NOT             reduce using rule 94 (bool_op -> LESSER_EQ .)
+    INT_CONST       reduce using rule 94 (bool_op -> LESSER_EQ .)
+    FLOAT_CONST     reduce using rule 94 (bool_op -> LESSER_EQ .)
+    STRING_CONST    reduce using rule 94 (bool_op -> LESSER_EQ .)
+    NULL            reduce using rule 94 (bool_op -> LESSER_EQ .)
+    TRUE            reduce using rule 94 (bool_op -> LESSER_EQ .)
+    FALSE           reduce using rule 94 (bool_op -> LESSER_EQ .)
+    ID              reduce using rule 94 (bool_op -> LESSER_EQ .)
+
+
+state 139
+
+    (95) bool_op -> GREATER_EQ .
+
+    THIS            reduce using rule 95 (bool_op -> GREATER_EQ .)
+    SUPER           reduce using rule 95 (bool_op -> GREATER_EQ .)
+    (               reduce using rule 95 (bool_op -> GREATER_EQ .)
+    NEW             reduce using rule 95 (bool_op -> GREATER_EQ .)
+    INCREMENT       reduce using rule 95 (bool_op -> GREATER_EQ .)
+    DECREMENT       reduce using rule 95 (bool_op -> GREATER_EQ .)
+    PLUS            reduce using rule 95 (bool_op -> GREATER_EQ .)
+    MINUS           reduce using rule 95 (bool_op -> GREATER_EQ .)
+    NOT             reduce using rule 95 (bool_op -> GREATER_EQ .)
+    INT_CONST       reduce using rule 95 (bool_op -> GREATER_EQ .)
+    FLOAT_CONST     reduce using rule 95 (bool_op -> GREATER_EQ .)
+    STRING_CONST    reduce using rule 95 (bool_op -> GREATER_EQ .)
+    NULL            reduce using rule 95 (bool_op -> GREATER_EQ .)
+    TRUE            reduce using rule 95 (bool_op -> GREATER_EQ .)
+    FALSE           reduce using rule 95 (bool_op -> GREATER_EQ .)
+    ID              reduce using rule 95 (bool_op -> GREATER_EQ .)
+
+
+state 140
+
+    (62) expr -> unary_op expr .
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for NOT_EQUAL resolved as shift
+  ! shift/reduce conflict for LESSER resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESSER_EQ resolved as shift
+  ! shift/reduce conflict for GREATER_EQ resolved as shift
+    )               reduce using rule 62 (expr -> unary_op expr .)
+    ;               reduce using rule 62 (expr -> unary_op expr .)
+    ,               reduce using rule 62 (expr -> unary_op expr .)
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+  ! PLUS            [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! MINUS           [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! TIMES           [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! DIVIDE          [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! AND             [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! OR              [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! EQUALITY        [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! NOT_EQUAL       [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! LESSER          [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! GREATER         [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! LESSER_EQ       [ reduce using rule 62 (expr -> unary_op expr .) ]
+  ! GREATER_EQ      [ reduce using rule 62 (expr -> unary_op expr .) ]
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 141
+
+    (39) stmt -> WHILE ( expr . ) stmt
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    )               shift and go to state 155
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 142
+
+    (40) stmt -> FOR ( optional_stmt_expr . ; optional_expr ; optional_stmt_expr ) stmt
+
+    ;               shift and go to state 156
+
+
+state 143
+
+    (50) optional_stmt_expr -> stmt_expr .
+
+    ;               reduce using rule 50 (optional_stmt_expr -> stmt_expr .)
+    )               reduce using rule 50 (optional_stmt_expr -> stmt_expr .)
+
+
+state 144
+
+    (51) optional_stmt_expr -> empty .
+
+    ;               reduce using rule 51 (optional_stmt_expr -> empty .)
+    )               reduce using rule 51 (optional_stmt_expr -> empty .)
+
+
+state 145
+
+    (41) stmt -> RETURN optional_expr ; .
+
+    IF              reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    WHILE           reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    FOR             reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    RETURN          reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    BREAK           reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    CONTINUE        reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    ;               reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    {               reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    INCREMENT       reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    DECREMENT       reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    INT             reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    FLOAT           reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    BOOLEAN         reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    ID              reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    THIS            reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    SUPER           reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    (               reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    NEW             reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    INT_CONST       reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    FLOAT_CONST     reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    STRING_CONST    reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    NULL            reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    TRUE            reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    FALSE           reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    }               reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+    ELSE            reduce using rule 41 (stmt -> RETURN optional_expr ; .)
+
+
+state 146
+
+    (65) assign -> field_access ASSIGN expr .
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    ;               reduce using rule 65 (assign -> field_access ASSIGN expr .)
+    )               reduce using rule 65 (assign -> field_access ASSIGN expr .)
+    ,               reduce using rule 65 (assign -> field_access ASSIGN expr .)
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+  ! PLUS            [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! MINUS           [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! TIMES           [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! DIVIDE          [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! AND             [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! OR              [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! EQUALITY        [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! NOT_EQUAL       [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! LESSER          [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! GREATER         [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! LESSER_EQ       [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+  ! GREATER_EQ      [ reduce using rule 65 (assign -> field_access ASSIGN expr .) ]
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 147
+
+    (70) method_invocation -> field_access ( arguments . )
+
+    )               shift and go to state 157
+
+
+state 148
+
+    (71) method_invocation -> field_access ( ) .
+
+    ;               reduce using rule 71 (method_invocation -> field_access ( ) .)
+    .               reduce using rule 71 (method_invocation -> field_access ( ) .)
+    )               reduce using rule 71 (method_invocation -> field_access ( ) .)
+    PLUS            reduce using rule 71 (method_invocation -> field_access ( ) .)
+    MINUS           reduce using rule 71 (method_invocation -> field_access ( ) .)
+    TIMES           reduce using rule 71 (method_invocation -> field_access ( ) .)
+    DIVIDE          reduce using rule 71 (method_invocation -> field_access ( ) .)
+    AND             reduce using rule 71 (method_invocation -> field_access ( ) .)
+    OR              reduce using rule 71 (method_invocation -> field_access ( ) .)
+    EQUALITY        reduce using rule 71 (method_invocation -> field_access ( ) .)
+    NOT_EQUAL       reduce using rule 71 (method_invocation -> field_access ( ) .)
+    LESSER          reduce using rule 71 (method_invocation -> field_access ( ) .)
+    GREATER         reduce using rule 71 (method_invocation -> field_access ( ) .)
+    LESSER_EQ       reduce using rule 71 (method_invocation -> field_access ( ) .)
+    GREATER_EQ      reduce using rule 71 (method_invocation -> field_access ( ) .)
+    ,               reduce using rule 71 (method_invocation -> field_access ( ) .)
+
+
+state 149
+
+    (72) arguments -> expr .
+    (73) arguments -> expr . , arguments
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+    )               reduce using rule 72 (arguments -> expr .)
+    ,               shift and go to state 158
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 150
+
+    (63) field_access -> primary . ID .
+
+    ASSIGN          reduce using rule 63 (field_access -> primary . ID .)
+    INCREMENT       reduce using rule 63 (field_access -> primary . ID .)
+    DECREMENT       reduce using rule 63 (field_access -> primary . ID .)
+    (               reduce using rule 63 (field_access -> primary . ID .)
+    .               reduce using rule 63 (field_access -> primary . ID .)
+    )               reduce using rule 63 (field_access -> primary . ID .)
+    PLUS            reduce using rule 63 (field_access -> primary . ID .)
+    MINUS           reduce using rule 63 (field_access -> primary . ID .)
+    TIMES           reduce using rule 63 (field_access -> primary . ID .)
+    DIVIDE          reduce using rule 63 (field_access -> primary . ID .)
+    AND             reduce using rule 63 (field_access -> primary . ID .)
+    OR              reduce using rule 63 (field_access -> primary . ID .)
+    EQUALITY        reduce using rule 63 (field_access -> primary . ID .)
+    NOT_EQUAL       reduce using rule 63 (field_access -> primary . ID .)
+    LESSER          reduce using rule 63 (field_access -> primary . ID .)
+    GREATER         reduce using rule 63 (field_access -> primary . ID .)
+    LESSER_EQ       reduce using rule 63 (field_access -> primary . ID .)
+    GREATER_EQ      reduce using rule 63 (field_access -> primary . ID .)
+    ;               reduce using rule 63 (field_access -> primary . ID .)
+    ,               reduce using rule 63 (field_access -> primary . ID .)
+
+
+state 151
+
+    (78) primary -> NEW ID ( . arguments )
+    (79) primary -> NEW ID ( . )
+    (72) arguments -> . expr
+    (73) arguments -> . expr , arguments
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    )               shift and go to state 160
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    arguments                      shift and go to state 159
+    expr                           shift and go to state 149
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 152
+
+    (37) stmt -> IF ( expr ) . stmt ELSE stmt
+    (38) stmt -> IF ( expr ) . stmt
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    stmt                           shift and go to state 161
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 153
+
+    (60) expr -> expr arith_op expr .
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for NOT_EQUAL resolved as shift
+  ! shift/reduce conflict for LESSER resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESSER_EQ resolved as shift
+  ! shift/reduce conflict for GREATER_EQ resolved as shift
+    )               reduce using rule 60 (expr -> expr arith_op expr .)
+    ;               reduce using rule 60 (expr -> expr arith_op expr .)
+    ,               reduce using rule 60 (expr -> expr arith_op expr .)
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+  ! PLUS            [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! MINUS           [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! TIMES           [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! DIVIDE          [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! AND             [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! OR              [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! EQUALITY        [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! NOT_EQUAL       [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! LESSER          [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! GREATER         [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! LESSER_EQ       [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+  ! GREATER_EQ      [ reduce using rule 60 (expr -> expr arith_op expr .) ]
+
+    arith_op                       shift and go to state 126
+    bool_op                        shift and go to state 127
+
+state 154
+
+    (61) expr -> expr bool_op expr .
+    (60) expr -> expr . arith_op expr
+    (61) expr -> expr . bool_op expr
+    (84) arith_op -> . PLUS
+    (85) arith_op -> . MINUS
+    (86) arith_op -> . TIMES
+    (87) arith_op -> . DIVIDE
+    (88) bool_op -> . AND
+    (89) bool_op -> . OR
+    (90) bool_op -> . EQUALITY
+    (91) bool_op -> . NOT_EQUAL
+    (92) bool_op -> . LESSER
+    (93) bool_op -> . GREATER
+    (94) bool_op -> . LESSER_EQ
+    (95) bool_op -> . GREATER_EQ
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for EQUALITY resolved as shift
+  ! shift/reduce conflict for NOT_EQUAL resolved as shift
+  ! shift/reduce conflict for LESSER resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESSER_EQ resolved as shift
+  ! shift/reduce conflict for GREATER_EQ resolved as shift
+    )               reduce using rule 61 (expr -> expr bool_op expr .)
+    ;               reduce using rule 61 (expr -> expr bool_op expr .)
+    ,               reduce using rule 61 (expr -> expr bool_op expr .)
+    PLUS            shift and go to state 128
+    MINUS           shift and go to state 129
+    TIMES           shift and go to state 130
+    DIVIDE          shift and go to state 131
+    AND             shift and go to state 132
+    OR              shift and go to state 133
+    EQUALITY        shift and go to state 134
+    NOT_EQUAL       shift and go to state 135
+    LESSER          shift and go to state 136
+    GREATER         shift and go to state 137
+    LESSER_EQ       shift and go to state 138
+    GREATER_EQ      shift and go to state 139
+
+  ! PLUS            [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! MINUS           [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! TIMES           [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! DIVIDE          [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! AND             [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! OR              [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! EQUALITY        [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! NOT_EQUAL       [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! LESSER          [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! GREATER         [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! LESSER_EQ       [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+  ! GREATER_EQ      [ reduce using rule 61 (expr -> expr bool_op expr .) ]
+
+    bool_op                        shift and go to state 127
+    arith_op                       shift and go to state 126
+
+state 155
+
+    (39) stmt -> WHILE ( expr ) . stmt
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    stmt                           shift and go to state 162
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 156
+
+    (40) stmt -> FOR ( optional_stmt_expr ; . optional_expr ; optional_stmt_expr ) stmt
+    (48) optional_expr -> . expr
+    (49) optional_expr -> . empty
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (99) empty -> .
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    ;               reduce using rule 99 (empty -> .)
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    optional_expr                  shift and go to state 163
+    expr                           shift and go to state 111
+    empty                          shift and go to state 112
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 157
+
+    (70) method_invocation -> field_access ( arguments ) .
+
+    ;               reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    .               reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    )               reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    PLUS            reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    MINUS           reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    TIMES           reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    DIVIDE          reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    AND             reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    OR              reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    EQUALITY        reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    NOT_EQUAL       reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    LESSER          reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    GREATER         reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    LESSER_EQ       reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    GREATER_EQ      reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+    ,               reduce using rule 70 (method_invocation -> field_access ( arguments ) .)
+
+
+state 158
+
+    (73) arguments -> expr , . arguments
+    (72) arguments -> . expr
+    (73) arguments -> . expr , arguments
+    (58) expr -> . primary
+    (59) expr -> . assign
+    (60) expr -> . expr arith_op expr
+    (61) expr -> . expr bool_op expr
+    (62) expr -> . unary_op expr
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (96) unary_op -> . PLUS
+    (97) unary_op -> . MINUS
+    (98) unary_op -> . NOT
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    PLUS            shift and go to state 105
+    MINUS           shift and go to state 106
+    NOT             shift and go to state 107
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+    ID              shift and go to state 102
+
+    expr                           shift and go to state 149
+    arguments                      shift and go to state 164
+    primary                        shift and go to state 99
+    assign                         shift and go to state 100
+    unary_op                       shift and go to state 101
+    literal                        shift and go to state 84
+    field_access                   shift and go to state 103
+    method_invocation              shift and go to state 104
+
+state 159
+
+    (78) primary -> NEW ID ( arguments . )
+
+    )               shift and go to state 165
+
+
+state 160
+
+    (79) primary -> NEW ID ( ) .
+
+    .               reduce using rule 79 (primary -> NEW ID ( ) .)
+    )               reduce using rule 79 (primary -> NEW ID ( ) .)
+    PLUS            reduce using rule 79 (primary -> NEW ID ( ) .)
+    MINUS           reduce using rule 79 (primary -> NEW ID ( ) .)
+    TIMES           reduce using rule 79 (primary -> NEW ID ( ) .)
+    DIVIDE          reduce using rule 79 (primary -> NEW ID ( ) .)
+    AND             reduce using rule 79 (primary -> NEW ID ( ) .)
+    OR              reduce using rule 79 (primary -> NEW ID ( ) .)
+    EQUALITY        reduce using rule 79 (primary -> NEW ID ( ) .)
+    NOT_EQUAL       reduce using rule 79 (primary -> NEW ID ( ) .)
+    LESSER          reduce using rule 79 (primary -> NEW ID ( ) .)
+    GREATER         reduce using rule 79 (primary -> NEW ID ( ) .)
+    LESSER_EQ       reduce using rule 79 (primary -> NEW ID ( ) .)
+    GREATER_EQ      reduce using rule 79 (primary -> NEW ID ( ) .)
+    ;               reduce using rule 79 (primary -> NEW ID ( ) .)
+    ,               reduce using rule 79 (primary -> NEW ID ( ) .)
+
+
+state 161
+
+    (37) stmt -> IF ( expr ) stmt . ELSE stmt
+    (38) stmt -> IF ( expr ) stmt .
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    ELSE            shift and go to state 166
+    IF              reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    WHILE           reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    FOR             reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    RETURN          reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    BREAK           reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    CONTINUE        reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    ;               reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    {               reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    INCREMENT       reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    DECREMENT       reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    INT             reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    FLOAT           reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    BOOLEAN         reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    ID              reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    THIS            reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    SUPER           reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    (               reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    NEW             reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    INT_CONST       reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    FLOAT_CONST     reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    STRING_CONST    reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    NULL            reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    TRUE            reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    FALSE           reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+    }               reduce using rule 38 (stmt -> IF ( expr ) stmt .)
+
+  ! ELSE            [ reduce using rule 38 (stmt -> IF ( expr ) stmt .) ]
+
+
+state 162
+
+    (39) stmt -> WHILE ( expr ) stmt .
+
+    IF              reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    WHILE           reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    FOR             reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    RETURN          reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    BREAK           reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    CONTINUE        reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    ;               reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    {               reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    INCREMENT       reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    DECREMENT       reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    INT             reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    FLOAT           reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    BOOLEAN         reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    ID              reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    THIS            reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    SUPER           reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    (               reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    NEW             reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    INT_CONST       reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    FLOAT_CONST     reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    STRING_CONST    reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    NULL            reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    TRUE            reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    FALSE           reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    }               reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+    ELSE            reduce using rule 39 (stmt -> WHILE ( expr ) stmt .)
+
+
+state 163
+
+    (40) stmt -> FOR ( optional_stmt_expr ; optional_expr . ; optional_stmt_expr ) stmt
+
+    ;               shift and go to state 167
+
+
+state 164
+
+    (73) arguments -> expr , arguments .
+
+    )               reduce using rule 73 (arguments -> expr , arguments .)
+
+
+state 165
+
+    (78) primary -> NEW ID ( arguments ) .
+
+    .               reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    )               reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    PLUS            reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    MINUS           reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    TIMES           reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    DIVIDE          reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    AND             reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    OR              reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    EQUALITY        reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    NOT_EQUAL       reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    LESSER          reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    GREATER         reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    LESSER_EQ       reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    GREATER_EQ      reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    ;               reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+    ,               reduce using rule 78 (primary -> NEW ID ( arguments ) .)
+
+
+state 166
+
+    (37) stmt -> IF ( expr ) stmt ELSE . stmt
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    stmt                           shift and go to state 168
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 167
+
+    (40) stmt -> FOR ( optional_stmt_expr ; optional_expr ; . optional_stmt_expr ) stmt
+    (50) optional_stmt_expr -> . stmt_expr
+    (51) optional_stmt_expr -> . empty
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (99) empty -> .
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    )               reduce using rule 99 (empty -> .)
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    ID              shift and go to state 102
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    optional_stmt_expr             shift and go to state 169
+    stmt_expr                      shift and go to state 143
+    empty                          shift and go to state 144
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 168
+
+    (37) stmt -> IF ( expr ) stmt ELSE stmt .
+
+    IF              reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    WHILE           reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    FOR             reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    RETURN          reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    BREAK           reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    CONTINUE        reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    ;               reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    {               reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    INCREMENT       reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    DECREMENT       reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    INT             reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    FLOAT           reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    BOOLEAN         reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    ID              reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    THIS            reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    SUPER           reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    (               reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    NEW             reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    INT_CONST       reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    FLOAT_CONST     reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    STRING_CONST    reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    NULL            reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    TRUE            reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    FALSE           reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    }               reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+    ELSE            reduce using rule 37 (stmt -> IF ( expr ) stmt ELSE stmt .)
+
+
+state 169
+
+    (40) stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr . ) stmt
+
+    )               shift and go to state 170
+
+
+state 170
+
+    (40) stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) . stmt
+    (37) stmt -> . IF ( expr ) stmt ELSE stmt
+    (38) stmt -> . IF ( expr ) stmt
+    (39) stmt -> . WHILE ( expr ) stmt
+    (40) stmt -> . FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt
+    (41) stmt -> . RETURN optional_expr ;
+    (42) stmt -> . stmt_expr ;
+    (43) stmt -> . BREAK ;
+    (44) stmt -> . CONTINUE ;
+    (45) stmt -> . block
+    (46) stmt -> . var_decl
+    (47) stmt -> . ;
+    (82) stmt_expr -> . assign
+    (83) stmt_expr -> . method_invocation
+    (34) block -> . { optional_stmts }
+    (21) var_decl -> . type variables ;
+    (65) assign -> . field_access ASSIGN expr
+    (66) assign -> . field_access INCREMENT
+    (67) assign -> . INCREMENT field_access
+    (68) assign -> . field_access DECREMENT
+    (69) assign -> . DECREMENT field_access
+    (70) method_invocation -> . field_access ( arguments )
+    (71) method_invocation -> . field_access ( )
+    (11) type -> . INT
+    (12) type -> . FLOAT
+    (13) type -> . BOOLEAN
+    (14) type -> . ID
+    (63) field_access -> . primary . ID
+    (64) field_access -> . ID
+    (74) primary -> . literal
+    (75) primary -> . THIS
+    (76) primary -> . SUPER
+    (77) primary -> . ( expr )
+    (78) primary -> . NEW ID ( arguments )
+    (79) primary -> . NEW ID ( )
+    (80) primary -> . field_access
+    (81) primary -> . method_invocation
+    (52) literal -> . INT_CONST
+    (53) literal -> . FLOAT_CONST
+    (54) literal -> . STRING_CONST
+    (55) literal -> . NULL
+    (56) literal -> . TRUE
+    (57) literal -> . FALSE
+
+    IF              shift and go to state 65
+    WHILE           shift and go to state 67
+    FOR             shift and go to state 68
+    RETURN          shift and go to state 70
+    BREAK           shift and go to state 72
+    CONTINUE        shift and go to state 73
+    ;               shift and go to state 69
+    {               shift and go to state 58
+    INCREMENT       shift and go to state 80
+    DECREMENT       shift and go to state 81
+    INT             shift and go to state 27
+    FLOAT           shift and go to state 28
+    BOOLEAN         shift and go to state 29
+    ID              shift and go to state 82
+    THIS            shift and go to state 85
+    SUPER           shift and go to state 86
+    (               shift and go to state 66
+    NEW             shift and go to state 87
+    INT_CONST       shift and go to state 88
+    FLOAT_CONST     shift and go to state 89
+    STRING_CONST    shift and go to state 90
+    NULL            shift and go to state 91
+    TRUE            shift and go to state 92
+    FALSE           shift and go to state 93
+
+    stmt                           shift and go to state 171
+    stmt_expr                      shift and go to state 71
+    block                          shift and go to state 74
+    var_decl                       shift and go to state 75
+    assign                         shift and go to state 76
+    method_invocation              shift and go to state 77
+    type                           shift and go to state 78
+    field_access                   shift and go to state 79
+    primary                        shift and go to state 83
+    literal                        shift and go to state 84
+
+state 171
+
+    (40) stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .
+
+    IF              reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    WHILE           reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    FOR             reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    RETURN          reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    BREAK           reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    CONTINUE        reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    ;               reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    {               reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    INCREMENT       reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    DECREMENT       reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    INT             reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    FLOAT           reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    BOOLEAN         reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    ID              reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    THIS            reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    SUPER           reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    (               reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    NEW             reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    INT_CONST       reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    FLOAT_CONST     reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    STRING_CONST    reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    NULL            reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    TRUE            reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    FALSE           reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    }               reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+    ELSE            reduce using rule 40 (stmt -> FOR ( optional_stmt_expr ; optional_expr ; optional_stmt_expr ) stmt .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for CLASS in state 5 resolved as shift
+WARNING: shift/reduce conflict for PRIVATE in state 21 resolved as shift
+WARNING: shift/reduce conflict for PUBLIC in state 21 resolved as shift
+WARNING: shift/reduce conflict for STATIC in state 21 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 140 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 140 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 140 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 140 resolved as shift
+WARNING: shift/reduce conflict for AND in state 140 resolved as shift
+WARNING: shift/reduce conflict for OR in state 140 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 140 resolved as shift
+WARNING: shift/reduce conflict for NOT_EQUAL in state 140 resolved as shift
+WARNING: shift/reduce conflict for LESSER in state 140 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 140 resolved as shift
+WARNING: shift/reduce conflict for LESSER_EQ in state 140 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQ in state 140 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 153 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 153 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 153 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 153 resolved as shift
+WARNING: shift/reduce conflict for AND in state 153 resolved as shift
+WARNING: shift/reduce conflict for OR in state 153 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 153 resolved as shift
+WARNING: shift/reduce conflict for NOT_EQUAL in state 153 resolved as shift
+WARNING: shift/reduce conflict for LESSER in state 153 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 153 resolved as shift
+WARNING: shift/reduce conflict for LESSER_EQ in state 153 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQ in state 153 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 154 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 154 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 154 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 154 resolved as shift
+WARNING: shift/reduce conflict for AND in state 154 resolved as shift
+WARNING: shift/reduce conflict for OR in state 154 resolved as shift
+WARNING: shift/reduce conflict for EQUALITY in state 154 resolved as shift
+WARNING: shift/reduce conflict for NOT_EQUAL in state 154 resolved as shift
+WARNING: shift/reduce conflict for LESSER in state 154 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 154 resolved as shift
+WARNING: shift/reduce conflict for LESSER_EQ in state 154 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQ in state 154 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 161 resolved as shift
+WARNING: reduce/reduce conflict in state 21 resolved using rule (class_body_decl -> class_body_decl class_body_decl)
+WARNING: rejected rule (empty -> <empty>) in state 21

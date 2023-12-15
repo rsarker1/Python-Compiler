@@ -5,6 +5,7 @@
 currClass = None
 currFunc = None
 tree = None
+error_flag = False
 base_types = ['int', 'float', 'boolean', 'string']
 
 def check_types(ast):
@@ -41,6 +42,7 @@ def type_block(block):
     for stmt in block.attributes['stmts']:
         if not type_stmt(stmt):
             block.isTypeCorrect = False
+            signal_error(f"Error: {stmt.kind} is causing an error at: {stmt.lineRange}")
             return False 
         
     block.isTypeCorrect = True
@@ -71,37 +73,38 @@ def type_stmt(stmt):
             else:
                 check = type_stmt(stmt.attributes['else'])
         stmt.isTypeCorrect = check
+        
     elif stmt.kind == 'While':
-        condition = stmt.attributes['loop-condition']
+        condition = stmt.attributes['loop_condition']
         stmt.isTypeCorrect = type_expr(condition)
         if not stmt.isTypeCorrect or condition.type != 'boolean':
             stmt.isTypeCorrect = False
             return False
         
-        stmt.isTypeCorrect = type_expr(stmt.attributes['loop-body'])
+        stmt.isTypeCorrect = type_expr(stmt.attributes['loop_body'])
     elif stmt.kind == 'For':
-        condition = stmt.attributes['loop-condition']
+        condition = stmt.attributes['loop_condition']
         stmt.isTypeCorrect = type_expr(condition)
         if not stmt.isTypeCorrect or condition.type != 'boolean':
             stmt.isTypeCorrect = False
             return False
 
         if stmt.isTypeCorrect:
-            stmt.isTypeCorrect = type_expr(stmt.attributes['initialize-expression'])
+            stmt.isTypeCorrect = type_expr(stmt.attributes['initialize_expression'])
         if stmt.isTypeCorrect:
-            stmt.isTypeCorrect = type_expr(stmt.attributes['update-expression'])
+            stmt.isTypeCorrect = type_expr(stmt.attributes['update_expression'])
         if stmt.isTypeCorrect:
-            stmt.isTypeCorrect = type_expr(stmt.attributes['loop-body'])
+            stmt.isTypeCorrect = type_expr(stmt.attributes['loop_body'])
     elif stmt.kind == 'Return':
         ret_type = ''
-        if 'return-expression' in stmt.attributes.keys():
+        if 'return_expression' in stmt.attributes.keys():
             ret_type = ''
             if currFunc.returnType.name not in base_types:
                 ret_type = 'user(' + currFunc.returnType.name + ')'
             else:
                 ret_type = currFunc.returnType.name
 
-            expr = stmt.attributes['return-expression']
+            expr = stmt.attributes['return_expression']
             stmt.isTypeCorrect = type_expr(expr)
             
             if stmt.isTypeCorrect and expr != None:
@@ -124,7 +127,9 @@ def type_expr_err(expr):
 def type_expr(expr):
     if expr == None:
         return True 
-    if expr.kind == 'Constant':
+    if expr.kind == 'Block':
+        type_block(expr)
+    elif expr.kind == 'Constant':
         type_constant(expr)
     elif expr.kind == 'Variable':
         type_var(expr)
@@ -136,35 +141,35 @@ def type_expr(expr):
         type_assign(expr)
     elif expr.kind == 'Auto':
         type_auto(expr)
-    elif expr.kind == 'Field-access':
+    elif expr.kind == 'Field_access':
         type_field(expr)
-    elif expr.kind == 'Method-call':
+    elif expr.kind == 'Method_call':
         type_method_call(expr)
-    elif expr.kind == 'New-object':
+    elif expr.kind == 'New_object':
         type_new_obj(expr)
     elif expr.kind == 'This':
         expr.type = 'user(' + currClass.name + ')'
         expr.isTypeCorrect = True
     elif expr.kind == 'Super':
-        if currClass.superName != '':
-            expr.type = 'user(' + currClass.superName + ')'
+        if currClass.super_name != '':
+            expr.type = 'user(' + currClass.super_name + ')'
             expr.isTypeCorrect = True
         else:
             type_expr_err(expr)
-    elif expr.kind == 'Class-reference':
+    elif expr.kind == 'Class_reference':
         type_class_ref(expr)
 
     return expr.isTypeCorrect
 
 def type_constant(expr):
     const_expr = expr.attributes['Expression']
-    if const_expr.kind == 'Integer-constant':
+    if const_expr.kind == 'Integer_constant':
         expr.type = 'int'
         const_expr.type = 'int'
-    elif const_expr.kind == 'Float-constant':
+    elif const_expr.kind == 'Float_constant':
         expr.type = 'float'
         const_expr.type = 'float'
-    elif const_expr.kind == 'String-constant':
+    elif const_expr.kind == 'String_constant':
         expr.type = 'string'
         const_expr.type = 'string'
     elif const_expr.kind == 'true' or const_expr.kind == 'false':
@@ -284,7 +289,7 @@ def type_auto(expr):
 
 def type_field(expr):
     base = expr.attributes['base']
-    field = expr.attributes['field-name']
+    field = expr.attributes['field_name']
     if not type_expr(base):
         type_expr_err(expr)
         return
@@ -294,7 +299,7 @@ def type_field(expr):
     if 'user' in base.type:
         applicability = 'instance'
         class_name = base.type[5:base.type.index(')')]
-    elif 'class-literal' in base.type:
+    elif 'class_literal' in base.type:
         applicability = 'static'
         class_name = base.type[14:base.type.index(')')]
     else:
@@ -311,9 +316,9 @@ def type_field(expr):
         return
 
     super_rec = None
-    if class_rec.superName != "":
+    if class_rec.super_name != "":
         for clss in tree.classes:
-            if class_rec.superName == clss.name:
+            if class_rec.super_name == clss.name:
                 super_rec = clss
                 break
 
@@ -338,7 +343,7 @@ def type_field(expr):
 
 def type_method_call(expr):
     base = expr.attributes['base']
-    method_name = expr.attributes['method-name']
+    method_name = expr.attributes['method_name']
     args = expr.attributes['arguments']
     if not type_expr(base):
         type_expr_err(expr)
@@ -349,7 +354,7 @@ def type_method_call(expr):
     if 'user' in base.type:
         applicability = 'instance'
         class_name = base.type[5:base.type.index(')')]
-    elif 'class-literal' in base.type:
+    elif 'class_literal' in base.type:
         applicability = 'static'
         class_name = base.type[14:base.type.index(')')]
     else:
@@ -365,21 +370,21 @@ def type_method_call(expr):
         return
 
     super_rec = None
-    if class_rec.superName != "":
+    if class_rec.super_name != "":
         for clss in tree.classes:
-            if clss.name == class_rec.superName:
+            if clss.name == class_rec.super_name:
                 super_rec = clss
                 break
  
     method_rec = None
-    for method_name in class_rec.methods:
-        if method_name.name == method_name:
-            method_rec = method_name
+    for curr_method in class_rec.methods:
+        if curr_method.name == method_name:
+            method_rec = curr_method
             break
     if method_rec == None and super_rec != None:
-        for method_name in super_rec.methods:
-            if method_name.name == method_name:
-                method_rec = method_name
+        for curr_method in super_rec.methods:
+            if curr_method.name == method_name:
+                method_rec = curr_method
                 break
     if method_rec == None:
         type_expr_err(expr)
@@ -389,7 +394,7 @@ def type_method_call(expr):
         return
 
     is_This = class_rec.name != currClass.name
-    is_Super = class_rec.name != currClass.superName
+    is_Super = class_rec.name != currClass.super_name
     if is_This and is_Super and method_rec.visibility == 'private':
         type_expr_err(expr)
         return
@@ -405,7 +410,7 @@ def type_method_call(expr):
         type_expr_err(expr)
 
 def type_new_obj(expr):
-    class_name = expr.attributes['class-name']
+    class_name = expr.attributes['class_name']
     args = expr.attributes['arguments']
     
     classRecord = None
@@ -428,7 +433,7 @@ def type_new_obj(expr):
         type_expr_err(expr)
         return
 
-    if constructorRecord.visibility == "public" or constructorRecord.visibility == "" or currClass.superName == class_name:
+    if constructorRecord.visibility == "public" or constructorRecord.visibility == "" or currClass.super_name == class_name:
         expr.type = 'user(' + class_name + ')'
         expr.isTypeCorrect = True
         expr.attributes['id'] = constructorRecord.id
@@ -436,7 +441,7 @@ def type_new_obj(expr):
         type_expr_err(expr)    
 
 def type_class_ref(expr):
-    class_name = expr.attributes['class-name']
+    class_name = expr.attributes['class_name']
     class_rec = None
     for clss in tree.classes:
         if clss.name == class_name:
@@ -444,7 +449,7 @@ def type_class_ref(expr):
             break
     
     if class_rec != None:
-        expr.type = 'class-literal(' + class_name + ')'
+        expr.type = 'class_literal(' + class_name + ')'
         expr.isTypeCorrect = True
     else:
         type_expr_err(expr)
@@ -475,13 +480,19 @@ def is_subtype(t1, t2):
     if 'user' in t1 and 'user' in t2:
         classA = t1[5:t1.index(')')]
         classB = t2[5:t2.index(')')]
-    elif 'class-literal' in t1 and 'class-literal' in t2:
+    elif 'class_literal' in t1 and 'class_literal' in t2:
         classA = t1[14:t1.index(')')]
         classB = t2[14:t1.index(')')]
     
     if classA != None and classB != None:
         for clss in tree.classes:
             if clss.name == classA:
-                return clss.superName == classB
+                return clss.super_name == classB
     
     return False
+
+def signal_error(string):
+    global error_flag
+    print(string)
+    error_flag = True
+    exit()

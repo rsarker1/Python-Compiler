@@ -186,7 +186,7 @@ def p_method_decl(p):
         applicability = 'static'
     else:
         applicability = 'instance'
-        
+    # add fix to id inner stmts correctly
     parameters = p[5]
     method_body = p[7]
     var_tab = []
