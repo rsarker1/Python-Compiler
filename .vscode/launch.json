@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["./hw4_cases/IntList.decaf"]
+            "args": ["./hw5_cases/a05_test01.decaf"]
         }
     ]
 }

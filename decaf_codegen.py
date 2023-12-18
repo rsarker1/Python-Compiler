@@ -1,554 +1,429 @@
-import ast
-import absmc
+# Name: Rahul Sarker
+# NetID: rsarker
+# Student ID: 113414194
 
-# TODO:
-# ??
-
-####################################################################################################
-
-# Global vars that hold label objects for different expressions / statements
+import decaf_absmc
+import decaf_ast
+from decaf_compiler import AST_tree
+local_var_list = []
 label_scope = []
 
-# This holds the label used for a `continue` statement in a loop
-# For `for` loops, this points to the update expression
-# For `while` loops, this points to the condition expression
-
-current_loop_continue_label = None
-
-# This holds the entrance of a loop, or the then part of an if statement
-current_enter_then_label = None
-
-# This holds the loop's exit or the else part of an if statement
-current_break_out_else_label = None
-
-# Examples:
-# if we're in an if stmt where:
-#
-# if (x < y && x == z) {
-#   x++;
-# } else {
-#   x--;
-# }
-# then if x < y BinaryExpr evals to false, we know to jump to the else branch
-# and use the label called 'current_break_out_else_label'
-# similarly, if we're in a loop where:
-#
-# while (x < y || x < z) {
-#   x++;
-# }
-#
-# if x < y evals to true, jump into the body of the loop
-# which is the label held by current_enter_then_label
-
+curr_loop_cont_label = None
+curr_enter_then_label = None
+curr_break_out_else_label = None
 non_static_field_offset = 0
-current_method = None
+currMethod = None
 
 def push_labels():
     global label_scope
-    global current_loop_continue_label, current_enter_then_label, current_break_out_else_label
-
-    label_scope.append(current_loop_continue_label)
-    label_scope.append(current_enter_then_label)
-    label_scope.append(current_break_out_else_label)
+    global curr_loop_cont_label, curr_enter_then_label, curr_break_out_else_label
+    label_scope.append(curr_loop_cont_label)
+    label_scope.append(curr_enter_then_label)
+    label_scope.append(curr_break_out_else_label)
 
 def pop_labels():
     global label_scope
-    global current_loop_continue_label, current_enter_then_label, current_break_out_else_label
+    global curr_loop_cont_label, curr_enter_then_label, curr_break_out_else_label
+    curr_break_out_else_label = label_scope.pop()
+    curr_enter_then_label = label_scope.pop()
+    curr_loop_cont_label = label_scope.pop()
 
-    current_break_out_else_label = label_scope.pop()
-    current_enter_then_label = label_scope.pop()
-    current_loop_continue_label = label_scope.pop()
-
-def calc_nonstatic_offsets(cls):
-    '''Calculates the offsets for all instance fields of a class.
-
-    Walks up the hierarchy and assigns each instance field a unique offset.
-    At the end, it sets the class's size to number of instance fields.'''
+def offsets_nonstatic(clss):
     global non_static_field_offset
+    if clss.super_name != '':
+        offsets_nonstatic(clss.super_name)
 
-    if cls.superclass is not None:
-        calc_nonstatic_offsets(cls.superclass)
-
-    for field in cls.fields.viewvalues():
-        if field.storage == 'instance':
+    for field in clss.fields:
+        if field.applicability == 'instance':
             field.offset = non_static_field_offset
-            print '# field {} given {}'.format(field.name, non_static_field_offset)
             non_static_field_offset += 1
 
-    cls.size = non_static_field_offset
+    clss.size = non_static_field_offset
 
+def offsets_static(clss):
+    for field in clss.fields:
+        if field.applicability == 'static':
+            field.offset = decaf_absmc.machine.static_data
+            decaf_absmc.machine.add_static_field()
 
-def calc_static_offsets(cls):
-    for field in cls.fields.viewvalues():
-        if field.storage == 'static':
-            field.offset = absmc.machine.static_data
-            absmc.machine.add_static_field()
-
-
-def preprocess(cls):
+def setup_offsets(clss):
     global non_static_field_offset
-
-    calc_static_offsets(cls)
-
+    offsets_static(clss)
     non_static_field_offset = 0
-    calc_nonstatic_offsets(cls)
+    offsets_nonstatic(clss)
 
-
-def generate_code(classtable):
-
-    for cls in classtable.viewvalues():
-        preprocess(cls)
-
-    for cls in classtable.viewvalues():
-        generate_class_code(cls)
-
+def generate_code(class_list):
+    for clss in class_list[2:]:
+        setup_offsets(clss)
+        
+    for clss in class_list[2:]:
+        generate_class_code(clss)
 
 def setup_registers(method):
-    # block 0 are the formals, which go into args
-    # if static, first arg is a0,
-    # if instance, first arg is a1, as `this` goes in a0
-
-    if isinstance(method, ast.Method) and method.storage == 'static':
-        absmc.Register.count = 0
+    if method.applicability == 'static':
+        decaf_absmc.Register.count = 0
     else:
-        absmc.Register.count = 1
+        decaf_absmc.Register.count = 1
+    
+    for var in method.parameters:
+        var.reg = decaf_absmc.Register('a')
+        print(f'# var {var.name} given {var.reg}')
 
-    for var in method.vars.vars[0].values():
-        var.reg = absmc.Register('a')
-        print '# var {} given {}'.format(var.name, var.reg)
+    decaf_absmc.Register.count = 0
+    
+    for var in method.variableTable:
+        var.reg = decaf_absmc.Register('t')
+        print(f'# var {var.name} given {var.reg}')
 
-    absmc.Register.count = 0
-    # rest of the vars in the method go into t registers
-    for block in range(1, len(method.vars.vars)):
-        for var in method.vars.vars[block].values():
-            var.reg = absmc.Register('t')
-            print '# var {} given {}'.format(var.name, var.reg)
-
-
-def generate_class_code(cls):
-    global current_method
-
-    for method in cls.methods:
+def generate_class_code(clss):
+    global currMethod
+    for method in clss.methods:
         setup_registers(method)
-        current_method = method
+        currMethod = method
         method.returned = False
-        absmc.MethodLabel(method.name, method.id)
+        decaf_absmc.MethodLabel(method.name, method.id)
         gen_code(method.body)
         if not method.returned:
-            absmc.ProcedureInstr('ret')
-    for constr in cls.constructors:
-        setup_registers(constr)
-        current_method = constr
-        constr.returned = False
-        absmc.ConstructorLabel(constr.id)
-        gen_code(constr.body)
-        if not constr.returned:
-            absmc.ProcedureInstr('ret')  # We assume constrs don't have a return
-
+            decaf_absmc.ProcedureInstruct('ret')
+    for construct in clss.constructors:
+        setup_registers(construct)
+        currMethod = construct
+        construct.returned = False
+        decaf_absmc.ConstructorLabel(construct.id)
+        gen_code(construct.body) 
+        if not construct.returned:
+            decaf_absmc.ProcedureInstruct('ret')  
 
 def gen_code(stmt):
-    global current_loop_continue_label, current_enter_then_label, current_break_out_else_label
-    # stmt.end_reg is the destination register for each expression
+    global curr_loop_cont_label, curr_enter_then_label, curr_break_out_else_label, local_var_list
+    if type(stmt) is list and isinstance(stmt[0], decaf_ast.VariableRecord):
+        for index_stmt in stmt:
+            local_var_list.append(index_stmt)
+        return         
     stmt.end_reg = None
     push_labels()
-
-    if isinstance(stmt, ast.BlockStmt):
-        for stmt_line in stmt.stmtlist:
-            gen_code(stmt_line)
-
-    elif isinstance(stmt, ast.ExprStmt):
-        gen_code(stmt.expr)
-
-    elif isinstance(stmt, ast.AssignExpr):
-        gen_code(stmt.rhs)
-        gen_code(stmt.lhs)
-
-        if stmt.lhs.type == ast.Type('float') and stmt.rhs.type == ast.Type('int'):
-            conv = absmc.ConvertInstr('itof', stmt.rhs.end_reg)
-            stmt.rhs.end_reg = conv.dst
-
-        if not isinstance(stmt.lhs, ast.FieldAccessExpr):
-            absmc.MoveInstr('move', stmt.lhs.end_reg, stmt.rhs.end_reg)
+    
+    if stmt.kind == 'Block':
+        for selected_stmt in stmt.attributes['stmts']:
+            gen_code(selected_stmt)
+    elif stmt.kind == 'Expr':
+        gen_code(stmt.attributes['expression'])
+    elif stmt.kind == 'Assign':
+        gen_code(stmt.attributes['right'])
+        gen_code(stmt.attributes['left'])
+        
+        if stmt.attributes['left'].type == 'float' and stmt.attributes['right'].type == 'int':
+            convert = decaf_absmc.ConvertInstruct('itof', stmt.attributes['right'].end_reg)
+            stmt.attributes['right'].end_reg = convert.dst
+        if stmt.attributes['left'].kind == 'Field_access':
+            decaf_absmc.MoveInstruct('move', stmt.attributes['left'].end_reg, stmt.attributes['right'].end_reg)
         else:
-            absmc.HeapInstr('hstore', stmt.lhs.base.end_reg, stmt.lhs.offset_reg, stmt.rhs.end_reg)
+            decaf_absmc.HeapInstruct('hstore', stmt.attributes['left'].attributes['base'].end_reg, stmt.attributes['left'].offset_reg, stmt.attributes['right'].end_reg)
+    elif stmt.kind == 'Variable': # FIX THIS LINE
+        if stmt.reg == None:
+            for var in local_var_list:
+                if var.name == stmt.name:
+                    stmt.end_reg = var.reg
+        else:
+            stmt.end_reg = stmt.reg
+    elif stmt.kind == 'Constant':
+        reg = decaf_absmc.Register()
+        const_stmt = stmt.attributes['Expression']
 
-    elif isinstance(stmt, ast.VarExpr):
-        stmt.end_reg = stmt.var.reg
-
-    elif isinstance(stmt, ast.ConstantExpr):
-        reg = absmc.Register()
-
-        if stmt.kind == 'int':
-            absmc.MoveInstr('move_immed_i', reg, stmt.int, True)
-        elif stmt.kind == 'float':
-            absmc.MoveInstr('move_immed_f', reg, stmt.float, True)
-        elif stmt.kind == 'string':
+        if const_stmt.type == 'Integer_constant': # FIX LATER
+            decaf_absmc.MoveInstruct('move_immed_i', reg, const_stmt.attributes['value'], True)
+        elif const_stmt.type == 'Float_constant':
+            decaf_absmc.MoveInstruct('move_immed_f', reg, const_stmt.attributes['value'], True)
+        elif const_stmt.type == 'String_constant':
             pass
-        elif stmt.kind == 'True':
-            absmc.MoveInstr('move_immed_i', reg, 1, True)
-        elif stmt.kind == 'False':
-            absmc.MoveInstr('move_immed_i', reg, 0, True)
-        elif stmt.kind == 'Null':
-            absmc.MoveInstr('move_immed_i', reg, 'Null', True)
+        elif const_stmt.kind == 'true':
+            decaf_absmc.MoveInstruct('move_immed_i', reg, 1, True)
+        elif const_stmt.kind == 'false':
+            decaf_absmc.MoveInstruct('move_immed_i', reg, 0, True)
+        elif const_stmt.kind == 'null':
+            decaf_absmc.MoveInstruct('move_immed_i', reg, 'Null', True)
+        const_stmt.end_reg = reg
+        
+    elif stmt.kind == 'Binary':
+        oper = stmt.attributes['operator']
+        if oper not in ['and', 'or']:
+            op1 = stmt.attributes['operand1']
+            op2 = stmt.attributes['operand2']
+            gen_code(op1)
+            gen_code(op2)
 
-
-        stmt.end_reg = reg
-
-    elif isinstance(stmt, ast.BinaryExpr):
-        if stmt.bop not in ['and', 'or']:
-            gen_code(stmt.arg1)
-            gen_code(stmt.arg2)
-
-            reg = absmc.Register()
-            flt = ast.Type('float')
-            intg = ast.Type('int')
-            if stmt.arg1.type == flt or stmt.arg2.type == flt:
+            reg = decaf_absmc.Register()
+            if op1.type == 'float' or op2.type == 'float':
                 expr_type = 'f'
             else:
                 expr_type = 'i'
 
-            if stmt.arg1.type == intg and stmt.arg2.type == flt:
-                conv = absmc.Convert('itof', stmt.arg1.end_reg)
-                stmt.arg1.end_reg = conv.dst
-            elif stmt.arg1.type == flt and stmt.arg2.type == intg:
-                conv = absmc.Convert('itof', stmt.arg2.end_reg)
-                stmt.arg2.end_reg = conv.dst
+            if op1.type == 'int' and op2.type == 'float':
+                convert = decaf_absmc.Convert('itof', op1.end_reg)
+                op1.end_reg = convert.dst
+            elif op1.type == 'float' and op2.type == 'int':
+                convert = decaf_absmc.Convert('itof', op2.end_reg)
+                op2.end_reg = convert.dst
 
-            if stmt.bop in ['add', 'sub', 'mul', 'div', 'gt', 'geq', 'lt', 'leq']:
-                absmc.ArithInstr(stmt.bop, reg, stmt.arg1.end_reg, stmt.arg2.end_reg, expr_type)
+            if oper in ['add', 'sub', 'mul', 'div', 'gt', 'geq', 'lt', 'leq']:
+                decaf_absmc.ArithInstruct(oper, reg, op1.end_reg, op2.end_reg, expr_type)
 
-            elif stmt.bop == 'eq' or stmt.bop == 'neq':
-                absmc.ArithInstr('sub', reg, stmt.arg1.end_reg, stmt.arg2.end_reg, expr_type)
+            elif oper == 'eq' or oper == 'neq':
+                decaf_absmc.ArithInstruct('sub', reg, op1.end_reg, op2.end_reg, expr_type)
 
-            if stmt.bop == 'eq':
-
-                # check if r2 == r3
-                # 1. perform sub r1, r2, r3 (done above)
-                # 2. branch to set_one if r1 is zero
-                # 3. else, fall through and set r1 to zero
-                # 4. jump out so we don't set r1 to one by accident
-
-                ieq_set = absmc.BranchLabel(stmt.lines, 'SET_EQ')
-                ieq_out = absmc.BranchLabel(stmt.lines, 'SET_EQ_OUT')
-
-                absmc.BranchInstr('bz', ieq_set, reg)
-                absmc.MoveInstr('move_immed_i', reg, 0, True)
-                absmc.BranchInstr('jmp', ieq_out)
+            if oper == 'eq':
+                ieq_set = decaf_absmc.BranchLabel(stmt.lineRange, 'SET_EQ')
+                ieq_out = decaf_absmc.BranchLabel(stmt.lineRange, 'SET_EQ_OUT')
+                decaf_absmc.BranchInstruct('bz', ieq_set, reg)
+                decaf_absmc.MoveInstruct('move_immed_i', reg, 0, True)
+                decaf_absmc.BranchInstruct('jmp', ieq_out)
 
                 ieq_set.add_to_code()
-                absmc.MoveInstr('move_immed_i', reg, 1, True)
-
+                decaf_absmc.MoveInstruct('move_immed_i', reg, 1, True)
                 ieq_out.add_to_code()
 
-        if stmt.bop == 'and':
-            and_skip = absmc.BranchLabel(stmt.lines, 'AND_SKIP')
-            gen_code(stmt.arg1)
-            reg = absmc.Register()
-            absmc.MoveInstr('move', reg, stmt.arg1.end_reg)
-            absmc.BranchInstr('bz', and_skip, stmt.arg1.end_reg)
-            gen_code(stmt.arg2)
-            absmc.MoveInstr('move', reg, stmt.arg2.end_reg)
+        if oper == 'and':
+            and_skip = decaf_absmc.BranchLabel(stmt.lineRange, 'AND_SKIP')
+            gen_code(op1)
+            reg = decaf_absmc.Register()
+            decaf_absmc.MoveInstruct('move', reg, op1.end_reg)
+            decaf_absmc.BranchInstruct('bz', and_skip, op1.end_reg)
+            gen_code(op2)
+            decaf_absmc.MoveInstruct('move', reg, op2.end_reg)
             and_skip.add_to_code()
 
-        if stmt.bop == 'or':
-            or_skip = absmc.BranchLabel(stmt.lines, 'OR_SKIP')
-            gen_code(stmt.arg1)
-            reg = absmc.Register()
-            absmc.MoveInstr('move', reg, stmt.arg1.end_reg)
-            absmc.BranchInstr('bnz', or_skip, stmt.arg1.end_reg)
-            gen_code(stmt.arg2)
-            absmc.MoveInstr('move', reg, stmt.arg2.end_reg)
+        if oper == 'or':
+            or_skip = decaf_absmc.BranchLabel(stmt.lineRange, 'OR_SKIP')
+            gen_code(op1)
+            reg = decaf_absmc.Register()
+            decaf_absmc.MoveInstruct('move', reg, op1.end_reg)
+            decaf_absmc.BranchInstruct('bnz', or_skip, op1.end_reg)
+            gen_code(op2)
+            decaf_absmc.MoveInstruct('move', reg, op2.end_reg)
             or_skip.add_to_code()
 
         stmt.end_reg = reg
+    
+    elif stmt.kind == 'For':
+        gen_code(stmt.attributes['initialize_expression'])
 
-    elif isinstance(stmt, ast.ForStmt):
-
-        # for-loop:
-        # for (i = 0; i < 10; i++) {
-        #   body
-        # }
-
-        # set i's reg equal to 0
-        # create a label after this, as this is where we jump back to at end of loop
-        # also create the 'out' label which is what we jump to when breaking out of loop
-        # generate code for the 'cond' (test if i's reg is less than 10's reg)
-        # test if the cond evaluated to false with 'bz', if so, break out of loop
-        # else, fall through into the body of the for-loop
-        # when body is over, generate code to update the var (i++)
-        # jump unconditionally back to the cond_label, where we eval if i is still < 10
-        gen_code(stmt.init)
-
-        cond_label = absmc.BranchLabel(stmt.lines, 'FOR_COND')
-        current_enter_then_label = entry_label = absmc.BranchLabel(stmt.lines, 'FOR_ENTRY')
-        current_loop_continue_label = continue_label = absmc.BranchLabel(stmt.lines, 'FOR_UPDATE')
-        current_break_out_else_label = out_label = absmc.BranchLabel(stmt.lines, 'FOR_OUT')
+        cond_label = decaf_absmc.BranchLabel(stmt.lineRange, 'FOR_COND')
+        curr_enter_then_label = entry_label = decaf_absmc.BranchLabel(stmt.lineRange, 'FOR_ENTRY')
+        curr_loop_cont_label = continue_label = decaf_absmc.BranchLabel(stmt.lineRange, 'FOR_UPDATE')
+        curr_break_out_else_label = out_label = decaf_absmc.BranchLabel(stmt.lineRange, 'FOR_OUT')
 
         cond_label.add_to_code()
-
-        gen_code(stmt.cond)
-        absmc.BranchInstr('bz', out_label, stmt.cond.end_reg)
+        gen_code(stmt.attributes['loop_condition'])
+        decaf_absmc.BranchInstruct('bz', out_label, stmt.attributes['loop_condition'].end_reg)
 
         entry_label.add_to_code()
-        gen_code(stmt.body)
+        gen_code(stmt.attributes['loop_body'])
 
         continue_label.add_to_code()
-        gen_code(stmt.update)
+        gen_code(stmt.attributes['update_expression'])
 
-        absmc.BranchInstr('jmp', cond_label)
+        decaf_absmc.BranchInstruct('jmp', cond_label)
 
         out_label.add_to_code()
+        
+    elif stmt.kind == 'Auto':
+        gen_code(stmt.attributes['operand']) 
+ 
+        if stmt.attributes['order'] == 'post':
+            tmp_reg = decaf_absmc.Register()
+            decaf_absmc.MoveInstruct('move', tmp_reg, stmt.attributes['operand'].end_reg)
 
-    elif isinstance(stmt, ast.AutoExpr):
-        gen_code(stmt.arg)
+        one_reg = decaf_absmc.Register()
+        decaf_absmc.MoveInstruct('move_immed_i', one_reg, 1, True)
 
-        if stmt.when == 'post':
-            tmp_reg = absmc.Register()
-            absmc.MoveInstr('move', tmp_reg, stmt.arg.end_reg)
+        decaf_absmc.ArithInstruct('add' if stmt.attributes['operation'] == 'inc' else 'dec', stmt.attributes['operand'].end_reg, stmt.attributes['operand'].end_reg, one_reg)
 
-        one_reg = absmc.Register()
-
-        # Load 1 into a register
-        absmc.MoveInstr('move_immed_i', one_reg, 1, True)
-
-        absmc.ArithInstr('add' if stmt.oper == 'inc' else 'sub', stmt.arg.end_reg, stmt.arg.end_reg, one_reg)
-
-        if stmt.when == 'post':
+        if stmt.attributes['order'] == 'post':
             stmt.end_reg = tmp_reg
         else:
-            stmt.end_reg = stmt.arg.end_reg
-
-    elif isinstance(stmt, ast.SkipStmt):
+            stmt.end_reg = stmt.attributes['operand'].end_reg
+            
+    elif stmt.kind == 'Skip':
         pass
 
-    elif isinstance(stmt, ast.ReturnStmt):
-        current_method.returned = True
-        if stmt.expr is None:
-            absmc.ProcedureInstr('ret')
+    elif stmt.kind == 'Return':
+        currMethod.returned = True
+        if stmt.attributes['expression'] is None:
+            decaf_absmc.ProcedureInstruct('ret')
             return
-        gen_code(stmt.expr)
+        gen_code(stmt.attributes['expression'])
 
-        # Load the result into a0
-        absmc.MoveInstr('move', absmc.Register('a', 0), stmt.expr.end_reg)
+        decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.attributes['expression'].end_reg)
+        decaf_absmc.ProcedureInstruct('ret')
 
-        # Return to caller
-        absmc.ProcedureInstr('ret')
-
-    elif isinstance(stmt, ast.WhileStmt):
-
-        current_loop_continue_label = cond_label = absmc.BranchLabel(stmt.lines, 'WHILE_COND')
-        current_enter_then_label = entry_label = absmc.BranchLabel(stmt.lines, 'WHILE_ENTRY')
-        current_break_out_else_label = out_label = absmc.BranchLabel(stmt.lines, 'WHILE_OUT')
-
+    elif stmt.kind == 'While':
+        curr_loop_cont_label = cond_label = decaf_absmc.BranchLabel(stmt.lineRange, 'WHILE_COND')
+        curr_enter_then_label = entry_label = decaf_absmc.BranchLabel(stmt.lineRange, 'WHILE_ENTRY')
+        curr_break_out_else_label = out_label = decaf_absmc.BranchLabel(stmt.lineRange, 'WHILE_OUT')
+        
         cond_label.add_to_code()
-
-        gen_code(stmt.cond)
-
-        absmc.BranchInstr('bz', out_label, stmt.cond.end_reg)
-
+        gen_code(stmt.attributes['loop_condition'])
+        decaf_absmc.BranchInstruct('bz', out_label, stmt.attributes['loop_condition'].end_reg)
         entry_label.add_to_code()
-
-        gen_code(stmt.body)
-
-        absmc.BranchInstr('jmp', cond_label)
-
+        gen_code(stmt.attributes['loop_body'])
+        decaf_absmc.BranchInstruct('jmp', cond_label)
         out_label.add_to_code()
 
-    elif isinstance(stmt, ast.BreakStmt):
-        absmc.BranchInstr('jmp', current_break_out_else_label)
+    elif stmt.kind == 'Break':
+        decaf_absmc.BranchInstruct('jmp', curr_break_out_else_label)
 
-    elif isinstance(stmt, ast.ContinueStmt):
-        absmc.BranchInstr('jmp', current_loop_continue_label)
+    elif stmt.kind == 'Continue':
+        decaf_absmc.BranchInstruct('jmp', curr_loop_cont_label)
+        
+    elif stmt.kind == 'If':
+        curr_enter_then_label = then_part = decaf_absmc.BranchLabel(stmt.lineRange, 'THEN_PART')
+        curr_break_out_else_label = else_part = decaf_absmc.BranchLabel(stmt.lineRange, 'ELSE_PART')
+        out_label = decaf_absmc.BranchLabel(stmt.lineRange, 'IF_STMT_OUT')
 
-    elif isinstance(stmt, ast.IfStmt):
+        gen_code(stmt.attributes['condition'])
 
-        # if (x == y)
-        #   ++x;
-        # else
-        #   --x;
-
-        # generate 2 labels, for the else part, and the out part
-        # test if x == y
-        # if not true, jump to the else part
-        # if true, we're falling through to the then part, then must jump
-        # out right before hitting the else part straight to the out part
-
-        current_enter_then_label = then_part = absmc.BranchLabel(stmt.lines, 'THEN_PART')
-        current_break_out_else_label = else_part = absmc.BranchLabel(stmt.lines, 'ELSE_PART')
-        out_label = absmc.BranchLabel(stmt.lines, 'IF_STMT_OUT')
-
-        gen_code(stmt.condition)
-
-        absmc.BranchInstr('bz', else_part, stmt.condition.end_reg)
+        decaf_absmc.BranchInstruct('bz', else_part, stmt.condition.end_reg)
 
         then_part.add_to_code()
-        gen_code(stmt.thenpart)
+        gen_code(stmt.attributes['then'])
 
-        absmc.BranchInstr('jmp', out_label)
+        decaf_absmc.BranchInstruct('jmp', out_label)
 
         else_part.add_to_code()
 
-        gen_code(stmt.elsepart)
+        gen_code(stmt.attributes['else'])
 
         out_label.add_to_code()
+        
+    elif stmt.kind == 'Field_access':
+        gen_code(stmt.attributes['base'])
+        found_field = ''
 
-    elif isinstance(stmt, ast.FieldAccessExpr):
-        gen_code(stmt.base)
+        for clsses in AST_tree.classes:
+            if clsses.name == stmt.attributes['base'].name:
+                for fields in clsses.fields: 
+                    if fields.id == stmt.attributes['field_name']:
+                        found_field = fields
 
-        cls = ast.lookup(ast.classtable, stmt.base.type.typename)
-        field = ast.lookup(cls.fields, stmt.fname)
+        offset_reg = decaf_absmc.Register()
+        ret_reg = decaf_absmc.Register()
 
-        offset_reg = absmc.Register()
-        ret_reg = absmc.Register()
-
-        absmc.MoveInstr('move_immed_i', offset_reg, field.offset, True)
-        absmc.HeapInstr('hload', ret_reg, stmt.base.end_reg, offset_reg)
+        decaf_absmc.MoveInstruct('move_immed_i', offset_reg, found_field.offset, True)
+        decaf_absmc.HeapInstruct('hload', ret_reg, stmt.base.end_reg, offset_reg)
 
         stmt.offset_reg = offset_reg
         stmt.end_reg = ret_reg
 
-    elif isinstance(stmt, ast.ClassReferenceExpr):
-        stmt.end_reg = absmc.Register('sap')
+    elif stmt.kind == 'Class_reference':
+        stmt.end_reg = decaf_absmc.Register('sap')
 
-    elif isinstance(stmt, ast.NewObjectExpr):
-        recd_addr_reg = absmc.Register()
-        size_reg = absmc.Register()
-        absmc.MoveInstr('move_immed_i', size_reg, stmt.classref.size, True)
-        absmc.HeapInstr('halloc', recd_addr_reg, size_reg)
+    elif stmt.kind == 'New_object':
+        recd_addr_reg = decaf_absmc.Register()
+        size_reg = decaf_absmc.Register()
+        clss = ''
+        for clsses in AST_tree.classes:
+            if clsses.name == stmt.attributes['class_name']:
+                clss = clsses
+        decaf_absmc.MoveInstruct('move_immed_i', size_reg, clss.size, True)
+        decaf_absmc.HeapInstruct('halloc', recd_addr_reg, size_reg)
 
-        if stmt.constr_id is None:
+        if stmt.attributes['id'] is None:
             stmt.end_reg = recd_addr_reg
             return
-
         saved_regs = []
-
         saved_regs.append(recd_addr_reg)
+        if currMethod.applicability != 'static':
+            saved_regs.append(decaf_absmc.Register('a', 0))
 
-        # add a0 if the current method is not static
-        if current_method.storage != 'static':
-            saved_regs.append(absmc.Register('a', 0))
-
-        # for each var in each block of the current method, add to save list
-        for block in range(0, len(current_method.vars.vars)):
-            for var in current_method.vars.vars[block].values():
+        for blk in range(0, len(currMethod.body)): # FIX THIS. User var_exprs
+            for var in currMethod.body[blk].values():
                 saved_regs.append(var.reg)
 
-        # save each reg in the saved list
         for reg in saved_regs:
-            absmc.ProcedureInstr('save', reg)
+            decaf_absmc.ProcedureInstruct('save', reg)
 
-        absmc.MoveInstr('move', absmc.Register('a', 0), recd_addr_reg)
-
+        decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), recd_addr_reg)
         arg_reg_index = 1
-
-        for arg in stmt.args:
+        for arg in stmt.attributes['arguments']:
             gen_code(arg)
-            absmc.MoveInstr('move', absmc.Register('a', arg_reg_index), arg.end_reg)
+            decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', arg_reg_index), arg.end_reg)
             arg_reg_index += 1
 
-        absmc.ProcedureInstr('call', 'C_{}'.format(stmt.constr_id))
-
-        # restore regs from the now-reversed save list
+        decaf_absmc.ProcedureInstruct('call', f"C_{stmt.attributes['id']}")
         for reg in reversed(saved_regs):
-            absmc.ProcedureInstr('restore', reg)
+            decaf_absmc.ProcedureInstruct('restore', reg)
 
         stmt.end_reg = recd_addr_reg
 
-    elif isinstance(stmt, ast.ThisExpr):
-        stmt.end_reg = absmc.Register('a', 0)
-
-    elif isinstance(stmt, ast.MethodInvocationExpr):
-        gen_code(stmt.base)
-
-        cls = ast.lookup(ast.classtable, stmt.base.type.typename)
-        for method in cls.methods:
-            if stmt.mname == method.name:
-                break
-
+    elif stmt.kind == 'This':
+        stmt.end_reg = decaf_absmc.Register('a', 0)
+        
+    elif stmt.kind == 'Method_call':
+        gen_code(stmt.attributes['base'])
+        
+        for clsses in AST_tree.classes:
+            if clsses.name == stmt.attributes['base'].name:
+                for mtd in clsses.methods:
+                    if stmt.attributes['method_name'] == mtd.name:
+                        break
         saved_regs = []
-
         arg_reg_index = 0
 
-        # first arg goes into a1 if desired method is not static
-        if method.storage != 'static':
+        if mtd.applicability != 'static':
             arg_reg_index += 1
-
-        # add a0 if the current method is not static
-        if current_method.storage != 'static':
-            saved_regs.append(absmc.Register('a', 0))
-
-        # for each var in each block of the current method, add to save list
-        for block in range(0, len(current_method.vars.vars)):
-            for var in current_method.vars.vars[block].values():
+        if currMethod.applicability != 'static':
+            saved_regs.append(decaf_absmc.Register('a', 0))
+        for blk in range(0, len(currMethod.body)): # FIX THIS
+            for var in currMethod.body[blk].values():
                 saved_regs.append(var.reg)
 
-        # save each reg in the saved list
         for reg in saved_regs:
-            absmc.ProcedureInstr('save', reg)
+            decaf_absmc.ProcedureInstruct('save', reg)
 
-        if method.storage != 'static':
-            absmc.MoveInstr('move', absmc.Register('a', 0), stmt.base.end_reg)
+        if mtd.applicability != 'static':
+            decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.base.end_reg)
 
-        for arg in stmt.args:
+        for arg in stmt.attributes['arguments']:
             gen_code(arg)
-            absmc.MoveInstr('move', absmc.Register('a', arg_reg_index), arg.end_reg)
+            decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', arg_reg_index), arg.end_reg)
             arg_reg_index += 1
 
-        absmc.ProcedureInstr('call', 'M_{}_{}'.format(method.name, method.id))
-
-        # Store the result in a temporary register
-        stmt.end_reg = absmc.Register()
-        absmc.MoveInstr('move', stmt.end_reg, absmc.Register('a', 0))
-
-        # restore regs from the reversed save list
+        decaf_absmc.ProcedureInstruct('call', f"M_{mtd.name}_{mtd.id}")
+        stmt.end_reg = decaf_absmc.Register()
+        decaf_absmc.MoveInstruct('move', stmt.end_reg, decaf_absmc.Register('a', 0))
         for reg in reversed(saved_regs):
-            absmc.ProcedureInstr('restore', reg)
+            decaf_absmc.ProcedureInstruct('restore', reg)
 
-    elif isinstance(stmt, ast.UnaryExpr):
-        gen_code(stmt.arg)
+    elif stmt.kind == 'Unary':
+        gen_code(stmt.attributes['operand'])
 
-        ret = absmc.Register()
-        if stmt.uop == 'uminus':
-            zero_reg = absmc.Register()
-            if stmt.arg.type == ast.Type('float'):
+        ret = decaf_absmc.Register()
+        if stmt.attributes['operator'] == 'uminus':
+            zero_reg = decaf_absmc.Register()
+            if stmt.attributes['operand'].type == 'float':
                 prefix = 'f'
             else:
                 prefix = 'i'
-            # if uminus, put 0 - <reg> into the return reg
-            absmc.MoveInstr('move_immed_{}'.format(prefix), zero_reg, 0, True)
-            absmc.ArithInstr('sub', ret, zero_reg, stmt.arg.end_reg, prefix)
+            decaf_absmc.MoveInstruct(f"move_immed_{prefix}", zero_reg, 0, True)
+            decaf_absmc.ArithInstruct('sub', ret, zero_reg, stmt.attributes['operand'].end_reg, prefix)
         else:
-            # if it's a 0, branch to set 1
-            # if it's a 1, we're falling through, setting to 0, and jumping out
-            set_one_label = absmc.BranchLabel(stmt.lines, 'SET_ONE')
-            out_label = absmc.BranchLabel(stmt.lines, 'UNARY_OUT')
+            set_one_label = decaf_absmc.BranchLabel(stmt.lineRange, 'SET_ONE')
+            out_label = decaf_absmc.BranchLabel(stmt.lineRange, 'UNARY_OUT')
 
-            absmc.BranchInstr('bz', set_one_label, stmt.arg.end_reg)
-            absmc.MoveInstr('move_immed_i', ret, 0, True)
-            absmc.BranchInstr('jmp', out_label)
+            decaf_absmc.BranchInstruct('bz', set_one_label, stmt.attributes['operand'].end_reg)
+            decaf_absmc.MoveInstruct('move_immed_i', ret, 0, True)
+            decaf_absmc.BranchInstruct('jmp', out_label)
 
             set_one_label.add_to_code()
 
-            absmc.MoveInstr('move_immed_i', ret, 1, True)
+            decaf_absmc.MoveInstruct('move_immed_i', ret, 1, True)
 
             out_label.add_to_code()
 
         stmt.end_reg = ret
 
-    elif isinstance(stmt, ast.SuperExpr):
-        stmt.end_reg = absmc.Register('a', 0)
-
-    elif isinstance(stmt, ast.ArrayAccessExpr):
-        # Create fake register.
-        stmt.end_reg = absmc.Register('n', 0)
-        print 'Found an array access. Arrays are not supported.'
-
-    elif isinstance(stmt, ast.NewArrayExpr):
-        # Create fake register.
-        stmt.end_reg = absmc.Register('n', 0)
-        print 'Found an array creation. Arrays are not supported.'
-
-    else:
-        print 'need instance ' + str(type(stmt))
+    elif stmt.kind == 'Super':
+        stmt.end_reg = decaf_absmc.Register('a', 0)
 
     pop_labels()
+  

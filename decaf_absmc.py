@@ -1,175 +1,124 @@
+# Name: Rahul Sarker
+# NetID: rsarker
+# Student ID: 113414194
+
 class AbstractMachine(object):
     def __init__(self):
         self.static_data = 0
-        self.instr_list = []
+        self.instruct_list = []
         self.labels = []
-
-    def add_instr(self, instr):
+    def add_instruct(self, instructors):
         if len(self.labels) > 0:
-            instr.label = ':\n'.join([str(label) for label in self.labels])
+            instructors.label = ':\n'.join([str(label) for label in self.labels])
             self.labels = []
-        self.instr_list.append(instr)
-
+        self.instruct_list.append(instructors)
     def add_label(self, label):
         self.labels.append(label)
-
     def add_static_field(self):
         self.static_data += 1
-
     def __str__(self):
         str_list = []
-        str_list.append('.static_data {}'.format(self.static_data))
-        str_list.extend([str(instr) for instr in self.instr_list])
+        str_list.append(f".static_data {self.static_data}")
+        str_list.extend([str(instr) for instr in self.instruct_list])
         return '\n'.join(str_list)
 
-
 class Instruction(object):
-    def __init__(self, op, args, label=None):
-        self.op = op
+    def __init__(self, opcode, args, label = None):
+        self.opcode = opcode
         self.args = args
         self.label = label
-        machine.add_instr(self)
-
+        abstract_machine.add_instruct(self)
     def __str__(self):
         arg_list = [str(arg) for arg in self.args]
-        label_string = ""
+        label_string = ''
         if self.label is not None:
-            label_string = '{}:\n'.format(self.label)
+            label_string = f"{self.label}:\n"
 
-        return '{}\t{} {}'.format(label_string, self.op, ', '.join(arg_list))
-
+        return f"{label_string}\t{self.opcode} {', '.join(arg_list)}"
 
 class Label(object):
     def __init__(self, name):
         self.name = name
-
     def __str__(self):
-        return '{}'.format(self.name)
-
+        return f"{self.name}"
 
 class Register(object):
     count = 0
+    def __init__(self, r_type='t', r_num=None):
+        self.r_type = r_type
+        self.r_num = r_num
 
-    def __init__(self, reg_type='t', reg_num=None):
-        self.reg_type = reg_type
-        self.reg_num = reg_num
-
-        if self.reg_num is None and self.reg_type != 'sap':
-            self.reg_num = Register.count
+        if self.r_num is None and self.r_type != 'sap':
+            self.r_num = Register.count
             Register.count += 1
 
     def __str__(self):
-        if self.reg_type == 'sap':
-            return '{}'.format(self.reg_type)
+        if self.r_type == 'sap':
+            return f"{self.r_type}"
         else:
-            return '{}{}'.format(self.reg_type, self.reg_num)
-
-
+            return f"{self.r_type}{self.r_num}"
+        
 class MethodLabel(Label):
     def __init__(self, name, id):
         if name == 'main':
             name = '__main__'
         else:
-            name = 'M_{}_{}'.format(name, id)
+            name = f"M_{name}_{id}"
         super(MethodLabel, self).__init__(name)
-
-        machine.add_label(self)
-
+        abstract_machine.add_label(self)
 
 class ConstructorLabel(Label):
     def __init__(self, id):
-        super(ConstructorLabel, self).__init__('C_{}'.format(id))
-
-        machine.add_label(self)
-
+        super(ConstructorLabel, self).__init__(f"C_{id}")
+        abstract_machine.add_label(self)
 
 class BranchLabel(Label):
     unique_int = 1
-
     def __init__(self, lines, name):
-        super(BranchLabel, self).__init__('L{}_{}_{}'.format(lines, name, BranchLabel.unique_int))
+        super(BranchLabel, self).__init__(f"L_{lines}_{name}_{BranchLabel.unique_int}")
         BranchLabel.unique_int += 1
 
     def add_to_code(self):
-        machine.add_label(self)
+        abstract_machine.add_label(self)
 
-
-class ProcedureInstr(Instruction):
-    '''The procedure instructions are:
-    call l
-    ret
-    save r
-    restore r'''
-    def __init__(self, op, arg=None):
+class ProcedureInstruct(Instruction):
+    def __init__(self, opcode, arg=None):
         if arg is None:
             args = []
         else:
             args = [arg]
-        super(ProcedureInstr, self).__init__(op, args)
+        super(ProcedureInstruct, self).__init__(opcode, args)
 
-
-class ConvertInstr(Instruction):
-    '''The conversion instructions are:
-    ftoi dst, src
-    itof dst, src'''
-    def __init__(self, op, reg):
+class ConvertInstruct(Instruction):
+    def __init__(self, opcode, reg):
         self.dst = Register()
-        super(ConvertInstr, self).__init__(op, [self.dst, reg])
+        super(ConvertInstruct, self).__init__(opcode, [self.dst, reg])
 
-
-class BranchInstr(Instruction):
-    '''The branch instructions are:
-    bz r, l
-    bnz r, l
-    jmp l'''
-    def __init__(self, op, label=None, reg=None):
+class BranchInstruct(Instruction):
+    def __init__(self, opcode, label=None, reg=None):
         if label is None:
             args = []
         elif reg is None:
             args = [label]
         else:
             args = [reg, label]
-        super(BranchInstr, self).__init__(op, args)
+        super(BranchInstruct, self).__init__(opcode, args)
 
-
-class MoveInstr(Instruction):
-    '''The move instructions are:
-    move_immed_i r, i
-    move_immed_f r, f
-    move dst, src'''
-    def __init__(self, op, dst, src, val_is_const=False):
+class MoveInstruct(Instruction):
+    def __init__(self, opcode, dst, src, val_is_const=False):
         self.is_src_const = val_is_const
-        super(MoveInstr, self).__init__(op, [dst, src])
+        super(MoveInstruct, self).__init__(opcode, [dst, src])
 
+class ArithInstruct(Instruction):
+    def __init__(self, opcode, dst, src1, src2, type = 'i'):
+        super(ArithInstruct, self).__init__(type + opcode, [dst, src1, src2])
 
-class ArithInstr(Instruction):
-    '''The arithmetic instructions are:
-    iadd dst, src1, src2
-    isub dst, src1, src2
-    imul dst, src1, src2
-    idiv dst, src1, src2
-    imod dst, src1, src2
-    igt  dst, src1, src2
-    igeq dst, src1, src2
-    ilt  dst, src1, src2
-    ileq dst, src1, src2
-
-    There also exist floating point operations of the form fadd, fsub, etc.
-    for all but the modulus operator (imod exists but fmod doesn't)'''
-    def __init__(self, op, dst, src1, src2, type='i'):
-        super(ArithInstr, self).__init__(type + op, [dst, src1, src2])
-
-
-class HeapInstr(Instruction):
-    '''The heap instructions are:
-    hload  dst, base, off
-    hstore base, off, dst
-    halloc base, off'''
-    def __init__(self, op, reg1, reg2, reg3=None):
-        if reg3 is None:
-            args = [reg1, reg2]
+class HeapInstruct(Instruction):
+    def __init__(self, opcode, r1, r2, r3 = None):
+        if r3 is None:
+            args = [r1, r2]
         else:
-            args = [reg1, reg2, reg3]
-        super(HeapInstr, self).__init__(op, args)
+            args = [r1, r2, r3]
+        super(HeapInstruct, self).__init__(opcode, args)
 
-machine = AbstractMachine()
+abstract_machine = AbstractMachine()
