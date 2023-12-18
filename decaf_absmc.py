@@ -16,12 +16,12 @@ class AbstractMachine(object):
         self.labels.append(label)
     def add_static_field(self):
         self.static_data += 1
-    def __str__(self):
+    def machine_code_str(self):
         str_list = []
         str_list.append(f".static_data {self.static_data}")
         str_list.extend([str(instr) for instr in self.instruct_list])
         return '\n'.join(str_list)
-
+    
 class Instruction(object):
     def __init__(self, opcode, args, label = None):
         self.opcode = opcode

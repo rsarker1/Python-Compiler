@@ -30,7 +30,7 @@ def main():
         decaf_codegen.generate_code(AST_tree.classes)
         filename = f"{fn.rpartition('.')[0]}.ami"
         machine_code = open(filename, 'w')
-        machine_code.write(abstract_machine)
+        machine_code.write(abstract_machine.machine_code_str())
         machine_code.close()
         return 
 

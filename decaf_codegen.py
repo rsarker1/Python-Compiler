@@ -5,7 +5,7 @@
 import decaf_absmc
 import decaf_ast
 from decaf_compiler import AST_tree
-local_var_list = []
+local_var_list = saved_classes = []
 label_scope = []
 
 curr_loop_cont_label = None
@@ -29,9 +29,12 @@ def pop_labels():
     curr_loop_cont_label = label_scope.pop()
 
 def offsets_nonstatic(clss):
-    global non_static_field_offset
+    global non_static_field_offset, saved_classes
     if clss.super_name != '':
-        offsets_nonstatic(clss.super_name)
+        for check_class in saved_classes:
+            if check_class.name == clss.super_name:
+                offsets_nonstatic(check_class)
+            break
 
     for field in clss.fields:
         if field.applicability == 'instance':
@@ -53,6 +56,8 @@ def setup_offsets(clss):
     offsets_nonstatic(clss)
 
 def generate_code(class_list):
+    global saved_classes
+    saved_classes = class_list[2:]
     for clss in class_list[2:]:
         setup_offsets(clss)
         
@@ -71,12 +76,12 @@ def setup_registers(method):
 
     decaf_absmc.Register.count = 0
     
-    for var in method.variableTable:
+    for var in method.variableTable: # originally method.variableTable
         var.reg = decaf_absmc.Register('t')
         print(f'# var {var.name} given {var.reg}')
 
 def generate_class_code(clss):
-    global currMethod
+    global currMethod, local_var_list
     for method in clss.methods:
         setup_registers(method)
         currMethod = method
@@ -85,6 +90,7 @@ def generate_class_code(clss):
         gen_code(method.body)
         if not method.returned:
             decaf_absmc.ProcedureInstruct('ret')
+        local_var_list = []
     for construct in clss.constructors:
         setup_registers(construct)
         currMethod = construct
@@ -93,6 +99,7 @@ def generate_class_code(clss):
         gen_code(construct.body) 
         if not construct.returned:
             decaf_absmc.ProcedureInstruct('ret')  
+        local_var_list = []
 
 def gen_code(stmt):
     global curr_loop_cont_label, curr_enter_then_label, curr_break_out_else_label, local_var_list
@@ -104,7 +111,7 @@ def gen_code(stmt):
     push_labels()
     
     if stmt.kind == 'Block':
-        for selected_stmt in stmt.attributes['stmts']:
+        for selected_stmt in stmt.attributes['stmts']: # block so do on var_exprs
             gen_code(selected_stmt)
     elif stmt.kind == 'Expr':
         gen_code(stmt.attributes['expression'])
@@ -115,26 +122,27 @@ def gen_code(stmt):
         if stmt.attributes['left'].type == 'float' and stmt.attributes['right'].type == 'int':
             convert = decaf_absmc.ConvertInstruct('itof', stmt.attributes['right'].end_reg)
             stmt.attributes['right'].end_reg = convert.dst
-        if stmt.attributes['left'].kind == 'Field_access':
+        if stmt.attributes['left'].kind != 'Field_access':
             decaf_absmc.MoveInstruct('move', stmt.attributes['left'].end_reg, stmt.attributes['right'].end_reg)
         else:
-            decaf_absmc.HeapInstruct('hstore', stmt.attributes['left'].attributes['base'].end_reg, stmt.attributes['left'].offset_reg, stmt.attributes['right'].end_reg)
+            decaf_absmc.HeapInstruct('hstore', stmt.attributes['left'].end_reg, stmt.attributes['left'].offset_reg, stmt.attributes['right'].end_reg)
     elif stmt.kind == 'Variable': # FIX THIS LINE
-        if stmt.reg == None:
+        if not hasattr(stmt, 'reg'):
             for var in local_var_list:
-                if var.name == stmt.name:
+                if var.name == stmt.attributes['var_name'] and var.id == stmt.attributes['id']: # check id as well 
                     stmt.end_reg = var.reg
+                    stmt.attributes['reg'] = var.reg
         else:
             stmt.end_reg = stmt.reg
     elif stmt.kind == 'Constant':
         reg = decaf_absmc.Register()
         const_stmt = stmt.attributes['Expression']
 
-        if const_stmt.type == 'Integer_constant': # FIX LATER
+        if const_stmt.kind == 'Integer_constant': # FIX LATER
             decaf_absmc.MoveInstruct('move_immed_i', reg, const_stmt.attributes['value'], True)
-        elif const_stmt.type == 'Float_constant':
+        elif const_stmt.kind == 'Float_constant':
             decaf_absmc.MoveInstruct('move_immed_f', reg, const_stmt.attributes['value'], True)
-        elif const_stmt.type == 'String_constant':
+        elif const_stmt.kind == 'String_constant':
             pass
         elif const_stmt.kind == 'true':
             decaf_absmc.MoveInstruct('move_immed_i', reg, 1, True)
@@ -248,12 +256,12 @@ def gen_code(stmt):
 
     elif stmt.kind == 'Return':
         currMethod.returned = True
-        if stmt.attributes['expression'] is None:
+        if stmt.attributes['return_expression'] is None:
             decaf_absmc.ProcedureInstruct('ret')
             return
-        gen_code(stmt.attributes['expression'])
+        gen_code(stmt.attributes['return_expression'])
 
-        decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.attributes['expression'].end_reg)
+        decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.attributes['return_expression'].end_reg)
         decaf_absmc.ProcedureInstruct('ret')
 
     elif stmt.kind == 'While':
@@ -282,7 +290,7 @@ def gen_code(stmt):
 
         gen_code(stmt.attributes['condition'])
 
-        decaf_absmc.BranchInstruct('bz', else_part, stmt.condition.end_reg)
+        decaf_absmc.BranchInstruct('bz', else_part, stmt.attributes['condition'].end_reg)
 
         then_part.add_to_code()
         gen_code(stmt.attributes['then'])
@@ -299,10 +307,10 @@ def gen_code(stmt):
         gen_code(stmt.attributes['base'])
         found_field = ''
 
-        for clsses in AST_tree.classes:
-            if clsses.name == stmt.attributes['base'].name:
+        for clsses in AST_tree.classes[2:]:
+            if clsses.name == stmt.attributes['base'].attributes['field_name']:
                 for fields in clsses.fields: 
-                    if fields.id == stmt.attributes['field_name']:
+                    if fields.name == stmt.attributes['field_name'] and fields.id == stmt.attributes['id']:
                         found_field = fields
 
         offset_reg = decaf_absmc.Register()
@@ -321,8 +329,8 @@ def gen_code(stmt):
         recd_addr_reg = decaf_absmc.Register()
         size_reg = decaf_absmc.Register()
         clss = ''
-        for clsses in AST_tree.classes:
-            if clsses.name == stmt.attributes['class_name']:
+        for clsses in AST_tree.classes[2:]:
+            if clsses.name == stmt.attributes['base'].attributes['class_name']:
                 clss = clsses
         decaf_absmc.MoveInstruct('move_immed_i', size_reg, clss.size, True)
         decaf_absmc.HeapInstruct('halloc', recd_addr_reg, size_reg)
@@ -334,10 +342,9 @@ def gen_code(stmt):
         saved_regs.append(recd_addr_reg)
         if currMethod.applicability != 'static':
             saved_regs.append(decaf_absmc.Register('a', 0))
-
-        for blk in range(0, len(currMethod.body)): # FIX THIS. User var_exprs
-            for var in currMethod.body[blk].values():
-                saved_regs.append(var.reg)
+            
+        for var in currMethod.body.attributes['var_tab']:
+            saved_regs.append(var.reg)
 
         for reg in saved_regs:
             decaf_absmc.ProcedureInstruct('save', reg)
@@ -361,10 +368,10 @@ def gen_code(stmt):
     elif stmt.kind == 'Method_call':
         gen_code(stmt.attributes['base'])
         
-        for clsses in AST_tree.classes:
-            if clsses.name == stmt.attributes['base'].name:
+        for clsses in AST_tree.classes[2:]:
+            if clsses.name == stmt.attributes['base'].attributes['class_name']:
                 for mtd in clsses.methods:
-                    if stmt.attributes['method_name'] == mtd.name:
+                    if stmt.attributes['method_name'] == mtd.name and stmt.attributes['id'] == mtd.id:
                         break
         saved_regs = []
         arg_reg_index = 0
@@ -373,15 +380,15 @@ def gen_code(stmt):
             arg_reg_index += 1
         if currMethod.applicability != 'static':
             saved_regs.append(decaf_absmc.Register('a', 0))
-        for blk in range(0, len(currMethod.body)): # FIX THIS
-            for var in currMethod.body[blk].values():
-                saved_regs.append(var.reg)
+
+        for var in currMethod.body.attributes['var_tab']:
+            saved_regs.append(var.reg)
 
         for reg in saved_regs:
             decaf_absmc.ProcedureInstruct('save', reg)
 
         if mtd.applicability != 'static':
-            decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.base.end_reg)
+            decaf_absmc.MoveInstruct('move', decaf_absmc.Register('a', 0), stmt.attributes['base'].end_reg)
 
         for arg in stmt.attributes['arguments']:
             gen_code(arg)
